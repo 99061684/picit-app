@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.FXCollections?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.pickmin.controllers.LoginController" styleClass="login-page-vbox-container">
+
+    <VBox styleClass="login-vbox-container">
+        <Label text="%login.title" styleClass="label-title" />
+
+        <TextField fx:id="usernameField" promptText="%login.username"/>
+        <PasswordField fx:id="passwordField" promptText="%login.password"/>
+        <ComboBox fx:id="languageComboBox">
+            <items>
+                <FXCollections fx:factory="observableArrayList"/>
+            </items>
+        </ComboBox>
+
+        <HBox styleClass="login-button-hbox-container">
+            <Button text="%login.button" onAction="#handleLogin" />
+            <Button text="%createAccount.button" onAction="#handleCreateAccount" />
+        </HBox>
+
+        <Label fx:id="errorMessage" textFill="red"/>
+    </VBox>
+</VBox>

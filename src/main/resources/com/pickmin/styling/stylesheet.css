@@ -1,0 +1,134 @@
+.page-vbox-container {
+    -fx-spacing: 10px;
+    gap: 10px;
+}
+
+.login-page-vbox-container {
+    -fx-alignment: center;
+    align-self: center;
+
+    -fx-spacing: 10px;
+    gap: 10px;
+}
+
+.vbox-container, .login-vbox-container {
+    -fx-padding: 0px 10px 0px;
+    padding: 0px 10px 0px;
+
+    -fx-alignment: center;
+    align-self: center;
+
+    -fx-spacing: 10px;
+    gap: 10px;
+}
+
+.button-available {
+    -fx-background-color: rgb(102, 162, 73, 0.25);
+    background-color: rgb(102, 162, 73, 0.25);
+
+    -fx-border-color: rgb(85, 188, 34);
+    border-color: rgb(85, 188, 34); 
+}
+
+.button-unavailable, .button-available {
+    -fx-padding: 2px 2px 2px;
+    padding: 2px 2px 2px;
+
+    -fx-border-width: 4px;
+    border-width: 4px;
+
+    -fx-border-style: solid;
+    border-style: solid;
+
+    -fx-border-radius: 7px;
+    border-radius: 7px;
+
+    -fx-background-radius: 7px;
+}
+.button-unavailable {
+    -fx-background-color: rgb(250, 193, 188, 0.5);
+    background-color: rgb(250, 193, 188, 0.5);
+
+    -fx-border-color: rgb(255, 23, 0);
+    border-color: rgb(255, 23, 0); 
+}
+
+.label-title {
+    -fx-font-size: 20px;
+    font-size: 20px;
+    -fx-font-weight: bold;
+    font-weight: bold;
+}
+
+.form-GridPane {
+    -fx-alignment: center;
+    align-self: center;
+
+    -fx-vgap: 10px;
+    row-gap: 10px;
+
+    -fx-hgap: 10px;
+    column-gap: 10px;
+}
+
+.form-error-label {
+    -fx-text-fill: red;
+    color: red;
+}
+
+.form-button-hbox-container {
+    -fx-alignment: center;
+    align-self: center;
+
+    -fx-spacing: 10px;
+    gap: 10px;
+}
+
+.login-button-hbox-container {
+    -fx-alignment: center;
+    align-self: center;
+
+    -fx-spacing: 10px;
+    gap: 10px;
+}
+
+.product-overview-filters-hbox-container, .shoppinglist-filters-hbox-container {
+    -fx-alignment: center;
+    align-self: center;
+
+    -fx-spacing: 10px;
+    gap: 10px;
+}
+
+.login-vbox-container TextField, .login-vbox-container PasswordField {
+    -fx-max-width: 250px;
+    max-width: 250px;
+}
+
+
+.logout-button {
+    -fx-alignment: center-right;
+    align-self: flex-end;
+}
+
+.menu-hbox-container {
+    -fx-padding: 0px 10px 0px;
+    padding: 0px 10px 0px;
+
+    -fx-skin: "com.sun.javafx.scene.control.skin.MenuBarSkin";
+    -fx-base: derive(#d0d0d0,-70%);
+    -fx-background-color: linear-gradient(to bottom, derive(#d0d0d0,50%), derive(#d0d0d0,-30%)), linear-gradient(to bottom, derive(#d0d0d0,34%) 0%, derive(#d0d0d0,-18%) 100%);
+    background-color: linear-gradient(to bottom, derive(#d0d0d0,50%), derive(#d0d0d0,-30%)), linear-gradient(to bottom, derive(#d0d0d0,34%) 0%, derive(#d0d0d0,-18%) 100%);
+    -fx-background-insets: 0, 1 0 1 0;
+    -fx-background-radius: 0, 0 ;
+}
+
+Label {
+    -fx-wrap-text: true;
+    word-wrap: normal;
+}
+
+#searchField {
+    -fx-pref-width: 250px;
+    width: 250px;
+}

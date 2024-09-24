@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!-- <MenuBar xmlns:fx="http://javafx.com/fxml" fx:controller="com.pickmin.controllers.MenuController">
+    <menus>
+        <Menu text="Navigatie">
+            <MenuItem text="Product Overzicht" onAction="#goToProductOverview"/>
+            <MenuItem fx:id="shoppingListMenuItem" text="Boodschappenlijst" onAction="#goToShoppingList"/>
+            <MenuItem fx:id="addProductMenuItem" text="Product Aanmaken" onAction="#goToAddProduct"/>
+        </Menu>
+    </menus>
+
+    <Button text="Logout" onAction="#handleLogout" styleClass="logout-button" />
+</MenuBar> -->
+
+<HBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.pickmin.controllers.MenuController" styleClass="menu-hbox-container">
+    <MenuBar>
+        <menus>
+            <Menu text="Navigatie">
+                <MenuItem text="Product Overzicht" onAction="#goToProductOverview"/>
+                <MenuItem fx:id="shoppingListMenuItem" text="Boodschappenlijst" onAction="#goToShoppingList"/>
+                <MenuItem fx:id="addProductMenuItem" text="Product Aanmaken" onAction="#goToAddProduct"/>
+            </Menu>
+        </menus>
+    </MenuBar>
+    <Region HBox.hgrow="ALWAYS"/>
+    <HBox styleClass="logout-hbox-container">
+        <Button text="Logout" onAction="#handleLogout" styleClass="logout-button" />
+    </HBox>
+</HBox>
