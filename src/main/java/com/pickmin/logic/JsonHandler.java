@@ -184,16 +184,16 @@ public class JsonHandler {
 
     // Haal de data van een ShoppingListProduct uit een JSONObject, maak een ShoppingListProduct aan met de data en return deze.
     private static ShoppingListProduct getShoppingListProductFromJson(JSONObject obj) {
-        String id = obj.getString("id");
+        String productId = obj.getString("productId");
         int amountInShoppinglist = obj.getInt("amountInShoppinglist");
 
-        return new ShoppingListProduct(Inventory.findProductById(id), amountInShoppinglist);
+        return new ShoppingListProduct(Inventory.findProductById(productId), amountInShoppinglist);
     }
 
     // Maak een JSONObject aan met data van een ShoppingListProduct
     private static JSONObject getShoppingListProductJson(ShoppingListProduct product) {
         JSONObject productJson = new JSONObject();
-        productJson.put("id", product.getId());
+        productJson.put("productId", product.getId());
         productJson.put("amountInShoppinglist", product.getAmountInShoppingList());
         return productJson;
     }
