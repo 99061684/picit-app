@@ -10,21 +10,18 @@
     <VBox styleClass="vbox-container">
         <Label text="%shoppinglist.overview" styleClass="label-title" />
 
-        <!-- <HBox styleClass="shoppinglist-filters-hbox-container">
-            <TextField fx:id="searchField" promptText="%product.search" />
-            <Button text="%product.button.search" onAction="#handleSearch" />
-        </HBox> -->
-
         <TableView fx:id="productTable">
             <columns>
                 <TableColumn text="%product.name" fx:id="productNameColumn" />
                 <TableColumn text="%product.availability" fx:id="availabilityColumn" />
-                <TableColumn text="%product.season" fx:id="seasonColumn" />
-                <TableColumn text="%product.stock" fx:id="stockColumn" />
-                <TableColumn text="%product.price" fx:id="priceColumn" />
+                <TableColumn text="%shoppingListProduct.amountInShoppingList" fx:id="amountInShoppingListColumn" />
+                <TableColumn text="%product.price.one" fx:id="priceColumn" />
+                <TableColumn text="%shoppingListProduct.price.total" fx:id="totalPriceColumn" />
                 <TableColumn text="%product.actions" fx:id="actionColumn" />
             </columns>
         </TableView>
+        <Label fx:id="totalLabel" />
+
         <Button text="Afrekenen" onAction="#handleCheckout" />
     </VBox>
 </VBox>

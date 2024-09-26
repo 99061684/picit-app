@@ -28,6 +28,7 @@ public class GlobalConfig {
     // console output
     public static final Boolean EMPTY_FILE_ERROR_CONSOLE = true;
     public static final Boolean EMPTY_FILE_ERROR_PATH_CONSOLE = true;
+    public static final Boolean NO_TRANSLATION_KEY_ERROR_CONSOLE = true;
 
     // Schermconfiguratie
     public static final int DEFAULT_WIDTH = 800;

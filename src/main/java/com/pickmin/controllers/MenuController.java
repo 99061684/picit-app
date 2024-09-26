@@ -1,14 +1,15 @@
 package com.pickmin.controllers;
 
-import javafx.fxml.FXML;
-import javafx.scene.control.MenuItem;
+import java.io.IOException;
+
 import com.pickmin.App;
 import com.pickmin.logic.Customer;
 import com.pickmin.logic.Employee;
 import com.pickmin.logic.User;
 import com.pickmin.logic.UserManagement;
 
-import java.io.IOException;
+import javafx.fxml.FXML;
+import javafx.scene.control.MenuItem;
 
 public class MenuController {
 
@@ -34,7 +35,7 @@ public class MenuController {
         User temp = UserManagement.getLoggedInUser();
         UserManagement.logout();
         try {
-            App.setRoot("Login");
+            App.goToPage("Login");
         } catch (IOException e) {
             e.printStackTrace();
             UserManagement.setLoggedInUser(temp);
@@ -45,7 +46,7 @@ public class MenuController {
     @FXML
     private void goToProductOverview() {
         try {
-            App.setRoot("ProductOverview"); // Navigatie naar productoverzicht
+            App.goToPage("ProductOverview"); // Navigatie naar productoverzicht
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -55,7 +56,7 @@ public class MenuController {
     @FXML
     private void goToShoppingList() {
         try {
-            App.setRoot("ShoppingListPage"); // Navigatie naar boodschappenlijstpagina
+            App.goToPage("ShoppingListPage"); // Navigatie naar boodschappenlijstpagina
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,7 +66,7 @@ public class MenuController {
     @FXML
     private void goToAddProduct() {
         try {
-            App.setRoot("AddProduct"); // Navigatie naar "product toevoegen pagina"
+            App.goToPage("AddProduct"); // Navigatie naar "product toevoegen pagina"
         } catch (IOException e) {
             e.printStackTrace();
         }

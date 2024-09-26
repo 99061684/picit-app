@@ -32,7 +32,7 @@ public class FormattingHelper {
     }
 
     // Factory voor het formatteren van prijs-cellen
-    public static Callback<TableColumn<Product, Double>, TableCell<Product, Double>> priceCellFactory() {
+    public static <T> Callback<TableColumn<T, Double>, TableCell<T, Double>> priceCellFactory() {
         return col -> new TableCell<>() {
             @Override
             protected void updateItem(Double price, boolean empty) {
@@ -46,8 +46,7 @@ public class FormattingHelper {
         };
     }
 
-    // Factory voor het formatteren van beschikbaarheid-cellen
-    public static Callback<TableColumn<Product, Boolean>, TableCell<Product, Boolean>> availabilityCellFactory() {
+    public static <T> Callback<TableColumn<T, Boolean>, TableCell<T, Boolean>> availabilityCellFactory() {
         return col -> new TableCell<>() {
             @Override
             protected void updateItem(Boolean available, boolean empty) {

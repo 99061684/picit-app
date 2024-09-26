@@ -1,5 +1,7 @@
 package com.pickmin.logic;
 
+import java.util.UUID;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -10,8 +12,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Product {
+    private String id;
     private String name;
-    // private String orgin;
     private boolean isAvailable;
     private String ripeningDate;
     private int timesViewed;
@@ -19,7 +21,8 @@ public class Product {
     private int stock;
     private double price;
 
-    public Product(String name, boolean isAvailable, String ripeningDate, int timesViewed, String season, int stock, double price) {
+    public Product(String id, String name, boolean isAvailable, String ripeningDate, int timesViewed, String season, int stock, double price) {
+        this.id = id;
         this.name = name;
         this.isAvailable = isAvailable;
         this.ripeningDate = ripeningDate;
@@ -30,7 +33,15 @@ public class Product {
     }
 
     public Product(String name, boolean isAvailable, String ripeningDate, String season, int stock, double price) {
-        this(name, isAvailable, ripeningDate, 0, season, stock, price);
+        this(UUID.randomUUID().toString(), name, isAvailable, ripeningDate, 0, season, stock, price);
+    }
+
+    public Product(String id, String name, boolean isAvailable, String ripeningDate, String season, int stock, double price) {
+        this(id, name, isAvailable, ripeningDate, 0, season, stock, price);
+    }
+
+    public Product(String name, boolean isAvailable, String ripeningDate, int timesViewed, String season, int stock, double price) {
+        this(UUID.randomUUID().toString(), name, isAvailable, ripeningDate, timesViewed, season, stock, price);
     }
 
     // Getters en Setters
@@ -40,6 +51,10 @@ public class Product {
 
     public boolean isAvailable() {
         return isAvailable;
+    }
+
+    public boolean checkAvailable() {
+        return this.isAvailable && this.stock > 0;
     }
 
     public String getRipeningDate() {
@@ -94,8 +109,12 @@ public class Product {
         this.isAvailable = available;
     }
 
-    public String availabilityColor() {
-        return isAvailable ? "green" : "red";
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     // Getters voor JavaFX Properties

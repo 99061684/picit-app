@@ -13,13 +13,13 @@ public class Inventory {
     // Functie die wordt uitgevoerd de eerste keer dat deze class wordt ingeladen.
     static {
         // Products worden één keer geïmporteerd uit de JSON-bestanden 
-        products = JsonHandler.importProducts();
+        products = JsonHandler.loadProductsFromJson();
     }
 
     public static void addProduct(Product product) {
         products.add(product);
         if (GlobalConfig.SAVE_PRODUCTS_AFTER_CREATE) {
-            JsonHandler.exportProducts(products);
+            JsonHandler.saveProductsToJson(products);
         }        
     }
 
@@ -32,15 +32,24 @@ public class Inventory {
         return null;
     }
 
+    public static Product findProductById(String id) {
+        for (Product product : products) {
+            if (product.getId().equals(id)) {
+                return product;
+            }
+        }
+        return null;
+    }
+
     public static void removeProduct(Product product) {
         products.remove(product);
         if (GlobalConfig.SAVE_PRODUCTS_AFTER_DELETE) {
-            JsonHandler.exportProducts(products);
+            JsonHandler.saveProductsToJson(products);
         }
     }
 
     public static void saveProducts() {
-        JsonHandler.exportProducts(products);
+        JsonHandler.saveProductsToJson(products);
     }
 
     public static ArrayList<Product> getProducts() {

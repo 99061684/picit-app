@@ -142,7 +142,7 @@ public class EditProductController extends ControllerWithParameters {
     @FXML
     private void handleCancel() {
         try {
-            App.setRoot("ProductOverview");
+            App.goToPage("ProductOverview");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -151,7 +151,7 @@ public class EditProductController extends ControllerWithParameters {
     @FXML
     private void handleSave() {
         try {
-            App.setRoot("ProductOverview");
+            App.goToPage("ProductOverview");
         } catch (IOException e) {
             e.printStackTrace();
         }

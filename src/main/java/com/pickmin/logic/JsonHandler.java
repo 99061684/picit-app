@@ -18,7 +18,7 @@ import com.pickmin.translation.Language;
 
 public class JsonHandler {
 
-    public static ArrayList<Product> importProducts() {
+    public static ArrayList<Product> loadProductsFromJson() {
         ArrayList<Product> products = new ArrayList<>();
         JSONArray dataArray = getDataArray(GlobalConfig.PRODUCTS_FILE_PATH);
 
@@ -30,22 +30,17 @@ public class JsonHandler {
         return products;
     }
 
-    // Methode om producten naar JSON te exporteren
-    public static void exportProducts(String filePath, ArrayList<Product> products) {
+    public static void saveProductsToJson(ArrayList<Product> products) {
         JSONArray productArray = new JSONArray();
 
         for (Product product : products) {
             productArray.put(getProductJson(product));
         }
 
-        writeToFile(filePath, productArray);
+        writeToFile(GlobalConfig.PRODUCTS_FILE_PATH, productArray);
     }
 
-    public static void exportProducts(ArrayList<Product> products) {
-        exportProducts(GlobalConfig.PRODUCTS_FILE_PATH, products);
-    }
-
-    public static void saveUsersToFile(List<User> users) {
+    public static void saveUsersToJson(List<User> users) {
         JSONArray userArray = new JSONArray();
         for (User user : users) {
             userArray.put(getUserJson(user));
@@ -54,7 +49,7 @@ public class JsonHandler {
         writeToFile(GlobalConfig.USERS_FILE_PATH, userArray);
     }
 
-    public static ArrayList<User> loadUsersFromFile() {
+    public static ArrayList<User> loadUsersFromJson() {
         ArrayList<User> users = new ArrayList<>();
         JSONArray dataArray = getDataArray(GlobalConfig.USERS_FILE_PATH);
 
@@ -66,22 +61,22 @@ public class JsonHandler {
         return users;
     }
 
-    public static void saveShoppingList(String userId, List<Product> products) {
+    public static void saveShoppingListToJson(String userId, List<ShoppingListProduct> products) {
         JSONArray jsonArray = new JSONArray();
-        for (Product product : products) {
-            jsonArray.put(getProductJson(product));
+        for (ShoppingListProduct product : products) {
+            jsonArray.put(getShoppingListProductJson(product));
         }
 
         writeToFile(GlobalConfig.DATA_FILE_PATH + "shoppinglist_" + userId + ".json", jsonArray);
     }
 
-    public static ShoppingList loadShoppingList(String userId) {
-        ArrayList<Product> products = new ArrayList<>();
+    public static ShoppingList loadShoppingListFromJson(String userId) {
+        ArrayList<ShoppingListProduct> products = new ArrayList<>();
         JSONArray dataArray = getDataArray(GlobalConfig.DATA_FILE_PATH + "shoppinglist_" + userId + ".json");
 
         for (int i = 0; i < dataArray.length(); i++) {
             JSONObject obj = dataArray.getJSONObject(i);
-            products.add(getProductFromJson(obj));
+            products.add(getShoppingListProductFromJson(obj));
         }
 
         ShoppingList shoppingList = new ShoppingList(products);
@@ -133,8 +128,7 @@ public class JsonHandler {
         return jsonArray;
     }
 
-    // Haal de data van de user uit een JSONObject, maak een user aan met de data en
-    // return deze.
+    // Haal de data van de user uit een JSONObject, maak een user aan met de data en return deze.
     private static User getUserFromJson(JSONObject obj) {
         String id = obj.getString("id");
         String username = obj.getString("username");
@@ -160,9 +154,9 @@ public class JsonHandler {
         return userJson;
     }
 
-    // Haal de data van een product uit een JSONObject, maak een product aan met de
-    // data en return deze.
+    // Haal de data van een product uit een JSONObject, maak een product aan met de data en return deze.
     private static Product getProductFromJson(JSONObject obj) {
+        String id = obj.getString("id");
         String name = obj.getString("name");
         boolean isAvailable = obj.getBoolean("isAvailable");
         String ripeningDate = obj.getString("ripeningDate");
@@ -171,12 +165,13 @@ public class JsonHandler {
         int stock = obj.getInt("stock");
         double price = obj.getDouble("price");
 
-        return new Product(name, isAvailable, ripeningDate, timesViewed, season, stock, price);
+        return new Product(id, name, isAvailable, ripeningDate, timesViewed, season, stock, price);
     }
 
     // Maak een JSONObject aan met data van een product
     private static JSONObject getProductJson(Product product) {
         JSONObject productJson = new JSONObject();
+        productJson.put("id", product.getId());
         productJson.put("name", product.getName());
         productJson.put("isAvailable", product.isAvailable());
         productJson.put("ripeningDate", product.getRipeningDate());
@@ -184,6 +179,22 @@ public class JsonHandler {
         productJson.put("season", product.getSeason());
         productJson.put("stock", product.getStock());
         productJson.put("price", product.getPrice());
+        return productJson;
+    }
+
+    // Haal de data van een ShoppingListProduct uit een JSONObject, maak een ShoppingListProduct aan met de data en return deze.
+    private static ShoppingListProduct getShoppingListProductFromJson(JSONObject obj) {
+        String id = obj.getString("id");
+        int amountInShoppinglist = obj.getInt("amountInShoppinglist");
+
+        return new ShoppingListProduct(Inventory.findProductById(id), amountInShoppinglist);
+    }
+
+    // Maak een JSONObject aan met data van een ShoppingListProduct
+    private static JSONObject getShoppingListProductJson(ShoppingListProduct product) {
+        JSONObject productJson = new JSONObject();
+        productJson.put("id", product.getId());
+        productJson.put("amountInShoppinglist", product.getAmountInShoppingList());
         return productJson;
     }
 }

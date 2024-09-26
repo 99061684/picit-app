@@ -4,6 +4,9 @@ import com.pickmin.customJavaFX.ActionButtonTableCellFactory;
 import com.pickmin.logic.FormattingHelper;
 import com.pickmin.logic.Inventory;
 import com.pickmin.logic.Product;
+import com.pickmin.logic.User;
+import com.pickmin.logic.UserManagement;
+import com.pickmin.logic.UserType;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
@@ -50,14 +53,23 @@ public class ProductOverviewController {
         availabilityColumn.setCellFactory(FormattingHelper.availabilityCellFactory());
         priceColumn.setCellFactory(FormattingHelper.priceCellFactory());
 
+        User loggedInUser = UserManagement.getLoggedInUser();  
+        // Bepaal wat niet zichtbaar is voor k
+        if (loggedInUser.getUserType() == UserType.CUSTOMER) {
+            availabilityColumn.setVisible(false);
+            timesViewedColumn.setVisible(false);
+            stockColumn.setVisible(false);
+        }
+
         fillProductTable();
-        productTable.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+        productTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
     // vult de productTable met data. Kan gebruikt worden om de data in de
     // productTable te herladen na een aanpassing bij de data.
     public void fillProductTable() {
         productTable.setItems(Inventory.getProductsObservableList());
+        productTable.refresh();
     }
 
     @FXML

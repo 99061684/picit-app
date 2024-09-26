@@ -102,7 +102,7 @@ public class AddProductController {
     @FXML
     private void handleCancel() {
         try {
-            App.setRoot("ProductOverview");
+            App.goToPage("ProductOverview");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -111,7 +111,7 @@ public class AddProductController {
     @FXML
     private void handleSave() {
         try {
-            App.setRoot("ProductOverview");
+            App.goToPage("ProductOverview");
         } catch (IOException e) {
             e.printStackTrace();
         }

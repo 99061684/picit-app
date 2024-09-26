@@ -1,10 +1,15 @@
 package com.pickmin.translation;
 
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import com.pickmin.config.GlobalConfig;
+import com.pickmin.exceptions.MissingTranslationException;
 
 public class TranslationHelper {
     private static ResourceBundle bundle;
@@ -15,7 +20,6 @@ public class TranslationHelper {
         Locale locale = Locale.forLanguageTag(language.getCode());
         bundle = ResourceBundle.getBundle("com.pickmin.translation.translation", locale);
 
-        // Laad de standaardtaal (zoals ingesteld in GlobalConfig)
         Locale defaultLocale = Locale.forLanguageTag(GlobalConfig.DEFAULT_LANGUAGE.getCode());
         defaultBundle = ResourceBundle.getBundle("com.pickmin.translation.translation", defaultLocale);
     }
@@ -25,14 +29,54 @@ public class TranslationHelper {
         try {
             return bundle.getString(key);
         } catch (MissingResourceException e) {
-            // Als de vertaling niet bestaat in de geselecteerde taal, gebruik de standaardtaal
             try {
                 return defaultBundle.getString(key);
             } catch (MissingResourceException ex) {
-                // Als de sleutel ook niet bestaat in de standaardtaal, geef de sleutel zelf terug
+                printMissingResourceException(ex);
                 return key;
             }
         }
+    }
+
+    // Methode om een vertaling op te halen met dynamische waarden (zoals een key die wordt meegegeven)
+    public static String get(String key, Object... args) {
+        String translation = null;
+        try {
+            translation = bundle.getString(key);
+        } catch (MissingResourceException e) {
+            try {
+                translation = defaultBundle.getString(key);
+            } catch (MissingResourceException ex) {
+                printMissingResourceException(ex);
+                return key;
+            }
+        }
+
+        return String.format(translation, args);
+    }
+
+    private static void printMissingResourceException(MissingResourceException ex) {
+        if (GlobalConfig.NO_TRANSLATION_KEY_ERROR_CONSOLE) {
+            System.out.println(new MissingTranslationException(ex).getMessage());
+        }        
+    }
+
+    public static Enumeration<String> getKeys() {
+        return bundle.getKeys();
+    }
+
+    public static Enumeration<String> getAllKeys() {
+        Set<String> keysSet = new LinkedHashSet<>();
+
+        if (defaultBundle != null) {
+            keysSet.addAll(Collections.list(defaultBundle.getKeys()));
+        }
+
+        if (bundle != null) {
+            keysSet.addAll(Collections.list(bundle.getKeys()));
+        }
+
+        return Collections.enumeration(keysSet);
     }
 
     public static ResourceBundle getBundle() {

@@ -23,7 +23,7 @@ public class Customer extends User {
 
     private void initializeShoppingList(){
         if (GlobalConfig.LOAD_SHOPPINGLIST) {
-            this.shoppingList = JsonHandler.loadShoppingList(this.getId());
+            this.shoppingList = JsonHandler.loadShoppingListFromJson(this.getId());
         } else {
             this.shoppingList = new ShoppingList();
         }

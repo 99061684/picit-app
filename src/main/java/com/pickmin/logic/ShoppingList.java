@@ -8,35 +8,67 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class ShoppingList {
-    private ArrayList<Product> shoppingItems;
+    private ArrayList<ShoppingListProduct> shoppingItems;
 
     public ShoppingList() {
         this.shoppingItems = new ArrayList<>();
     }
 
-    public ShoppingList(ArrayList<Product> shoppingItems) {
+    public ShoppingList(ArrayList<ShoppingListProduct> shoppingItems) {
         this.shoppingItems = shoppingItems;
     }
 
     public void addProduct(Product product) {
-        shoppingItems.add(product);
+        ShoppingListProduct shoppingListProduct = findShoppingListProductById(product.getId());
+        if (shoppingListProduct != null) {
+            shoppingListProduct.increaseAmountInShoppingList();
+        } else {
+            shoppingItems.add(new ShoppingListProduct(product));
+        }
         if (GlobalConfig.SAVE_SHOPPINGLIST) {
-            JsonHandler.saveShoppingList(UserManagement.getLoggedInUser().getId(), shoppingItems);
+            JsonHandler.saveShoppingListToJson(UserManagement.getLoggedInUser().getId(), shoppingItems);
         }
     }
 
     public void removeProduct(Product product) {
-        shoppingItems.remove(product);
-        if (GlobalConfig.SAVE_SHOPPINGLIST) {
-            JsonHandler.saveShoppingList(UserManagement.getLoggedInUser().getId(), shoppingItems);
+        ShoppingListProduct shoppingListProduct = findShoppingListProductById(product.getId());
+        if (shoppingListProduct != null) {
+            shoppingItems.remove(shoppingListProduct);
+
+            if (GlobalConfig.SAVE_SHOPPINGLIST) {
+                JsonHandler.saveShoppingListToJson(UserManagement.getLoggedInUser().getId(), shoppingItems);
+            }
         }
     }
 
-    public ArrayList<Product> getShoppingItems() {
+    public void removeShoppingListProduct(ShoppingListProduct shoppingListProduct) {
+        if (shoppingListProduct != null) {
+            shoppingItems.remove(shoppingListProduct);
+
+            if (GlobalConfig.SAVE_SHOPPINGLIST) {
+                JsonHandler.saveShoppingListToJson(UserManagement.getLoggedInUser().getId(), shoppingItems);
+            }
+        }
+    }
+
+    public ArrayList<ShoppingListProduct> getShoppingItems() {
         return shoppingItems;
     }
 
-    public ObservableList<Product> getShoppingItemsObservableList() {
+    public ObservableList<ShoppingListProduct> getShoppingItemsObservableList() {
         return FXCollections.observableArrayList(shoppingItems);
+    }
+
+    public ShoppingListProduct findShoppingListProductById(String id) {
+        for (ShoppingListProduct shoppingListProduct : shoppingItems) {
+            if (shoppingListProduct.getId().equals(id)) {
+                return shoppingListProduct;
+            }
+        }
+        return null;
+    }
+
+    public double calculateTotalPrice() {
+        return this.shoppingItems.stream().mapToDouble(shoppingListProduct -> shoppingListProduct.calculateTotalPrice()).sum();
     }
 }

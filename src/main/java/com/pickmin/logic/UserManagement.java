@@ -1,11 +1,12 @@
 package com.pickmin.logic;
 
 import java.util.ArrayList;
-import com.pickmin.translation.Language;
+
 import com.pickmin.config.GlobalConfig;
 import com.pickmin.exceptions.ExistingUserException;
 import com.pickmin.exceptions.InvalidInputException;
 import com.pickmin.exceptions.MissingFieldException;
+import com.pickmin.translation.Language;
 
 public class UserManagement {
     private static ArrayList<User> users = new ArrayList<>();
@@ -14,7 +15,7 @@ public class UserManagement {
     // Functie die wordt uitgevoerd de eerste keer dat deze class wordt ingeladen.
     static {
         // Users worden één keer geïmporteerd uit de JSON-bestanden
-        users = JsonHandler.loadUsersFromFile();
+        users = JsonHandler.loadUsersFromJson();
     }
 
     // getters and setters
@@ -57,7 +58,7 @@ public class UserManagement {
             user = new Customer(username, encryptedPassword, preferredLanguage);
         }
         users.add(user);
-        JsonHandler.saveUsersToFile(users);
+        JsonHandler.saveUsersToJson(users);
 
         System.out.println("Gebruiker succesvol aangemaakt!");
     }
@@ -69,7 +70,7 @@ public class UserManagement {
             // Pas de taal van de gebruiker aan, sla de user op en zet de taal van de
             // applicatie naar de taal van de user.
             user.setPreferredLanguage(preferredLanguage);
-            JsonHandler.saveUsersToFile(users);
+            JsonHandler.saveUsersToJson(users);
             GlobalConfig.setLanguage(user.getPreferredLanguage());
 
             setLoggedInUser(user);

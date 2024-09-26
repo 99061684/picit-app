@@ -60,8 +60,8 @@ public class ActionButtonTableCellFactory implements Callback<TableColumn<Produc
                 } else {
                     User loggedInUser = UserManagement.getLoggedInUser();
                     if (loggedInUser instanceof Customer) { // check of de ingelogde gebruiker een klant is
-                        actionButtons.getChildren().setAll(addButton, viewButton);
                         addButtonStyling(addButton);
+                        actionButtons.getChildren().setAll(addButton, viewButton);
                     } else if (loggedInUser instanceof Employee) { // check of de ingelogde gebruiker een medewerker is
                         actionButtons.getChildren().setAll(editButton, deleteButton);
                     }
@@ -73,7 +73,7 @@ public class ActionButtonTableCellFactory implements Callback<TableColumn<Produc
             private void handleAddToShoppingList() {
                 Product product = getTableView().getItems().get(getIndex());
                 if (shoppingList != null) {
-                    if (product.isAvailable() && product.getStock() > 0) {
+                    if (product.checkAvailable()) {
                         shoppingList.addProduct(product);
                         System.out.println("Product toegevoegd aan shoppinglist");
                     } else {
@@ -87,6 +87,7 @@ public class ActionButtonTableCellFactory implements Callback<TableColumn<Produc
                 Product product = getTableView().getItems().get(getIndex());
                 if (product != null) {
                     product.increaseTimesViewed();
+                    controller.fillProductTable();
                     System.out.println("Product bekeken: " + product.getName());
                 }
             }
@@ -111,11 +112,14 @@ public class ActionButtonTableCellFactory implements Callback<TableColumn<Produc
 
             private void addButtonStyling(Button addButton) {
                 Product product = getTableView().getItems().get(getIndex());
-                // addButton.getStyleClass().clear();
-                if (product.isAvailable()) {
+                addButton.getStyleClass().removeAll("button-unavailable", "button-available");
+                addButton.setDisable(false);
+                if (product.checkAvailable()) {
                     addButton.getStyleClass().add("button-available");
+                    addButton.setDisable(false);
                 } else {
                     addButton.getStyleClass().add("button-unavailable");
+                    addButton.setDisable(true);
                 }
             }
 
@@ -123,7 +127,7 @@ public class ActionButtonTableCellFactory implements Callback<TableColumn<Produc
                 HashMap<String, Object> args = new HashMap<>();
                 args.put("product", product);
                 try {
-                    App.setRoot("EditProduct", args);
+                    App.goToPage("EditProduct", args);
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (InvalidParametersControllerException e) {

@@ -46,7 +46,7 @@ public class LoginController {
 
         User user = userManagement.loginUser(username, password, preferredLanguage);
         if (user != null) {
-            App.setRoot("ProductOverview");
+            App.goToPage("ProductOverview");
             System.out.println("Succesvol ingelogd als " + user.getUsername());
         } else {
             errorMessage.setText("Ongeldige inloggegevens");
