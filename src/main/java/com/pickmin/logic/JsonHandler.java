@@ -83,6 +83,46 @@ public class JsonHandler {
         return shoppingList;
     }
 
+    // Opslaan van branches
+    public static void saveBranchesToJson(List<Branch> branches) {
+        JSONArray branchArray = new JSONArray();
+        for (Branch branch : branches) {
+            branchArray.put(createBranchJSONObject(branch));
+        }
+        writeToFile("branches.json", branchArray);
+    }
+
+    // Laden van branches
+    public static List<Branch> loadBranchesFromJson() {
+        JSONArray branchArray = getDataArray("branches.json");
+        List<Branch> branches = new ArrayList<>();
+        for (int i = 0; i < branchArray.length(); i++) {
+            JSONObject branchObject = branchArray.getJSONObject(i);
+            branches.add(parseBranchJSONObject(branchObject));
+        }
+        return branches;
+    }
+
+    // Opslaan van BranchProduct voor een specifieke branch
+    public static void saveBranchProductsToJson(String branchId, List<BranchProduct> branchProducts) {
+        JSONArray productArray = new JSONArray();
+        for (BranchProduct product : branchProducts) {
+            productArray.put(createBranchProductJSONObject(product));
+        }
+        writeToFile("branch_" + branchId + "_products.json", productArray);
+    }
+
+    // Laden van BranchProduct voor een specifieke branch
+    public static List<BranchProduct> loadBranchProductsFromJson(String branchId) {
+        JSONArray productArray = getDataArray("branch_" + branchId + "_products.json");
+        List<BranchProduct> products = new ArrayList<>();
+        for (int i = 0; i < productArray.length(); i++) {
+            JSONObject productObject = productArray.getJSONObject(i);
+            products.add(parseBranchProductJSONObject(productObject));
+        }
+        return products;
+    }
+
     // ----------------- helper functions -----------------
 
     // schrijf een JSONArray met data naar een bestand.
@@ -196,5 +236,51 @@ public class JsonHandler {
         productJson.put("productId", product.getId());
         productJson.put("amountInShoppinglist", product.getAmountInShoppingList());
         return productJson;
+    }
+
+    // Hulpfunctie om JSONObject voor een Branch te maken
+    private static JSONObject createBranchJSONObject(Branch branch) {
+        JSONObject branchObject = new JSONObject();
+        branchObject.put("id", branch.getId());
+        branchObject.put("name", branch.getName());
+        branchObject.put("country", branch.getCountry());
+        branchObject.put("city", branch.getCity());
+        branchObject.put("postalCode", branch.getPostalCode());
+        branchObject.put("street", branch.getStreet());
+        branchObject.put("streetNumber", branch.getStreetNumber());
+        return branchObject;
+    }
+
+    // Hulpfunctie om JSONObject voor BranchProduct te maken
+    private static JSONObject createBranchProductJSONObject(BranchProduct product) {
+        JSONObject productObject = new JSONObject();
+        productObject.put("id", product.getId());
+        productObject.put("name", product.getName());
+        productObject.put("price", product.getPrice());
+        productObject.put("stock", product.getStock());
+        productObject.put("status", product.getStatus().getId());
+        return productObject;
+    }
+
+    // Parsing van JSONObject naar Branch
+    private static Branch parseBranchJSONObject(JSONObject branchObject) {
+        String id = branchObject.getString("id");
+        String name = branchObject.getString("name");
+        String country = branchObject.getString("country");
+        String city = branchObject.getString("city");
+        String postalCode = branchObject.getString("postalCode");
+        String street = branchObject.getString("street");
+        int streetNumber = branchObject.getInt("streetNumber");
+
+        return new Branch(id, name, country, city, postalCode, street, streetNumber);
+    }
+
+    // Parsing van JSONObject naar BranchProduct
+    private static BranchProduct parseBranchProductJSONObject(JSONObject productObject) {
+        ProductStatus status = ProductStatus.getById(productObject.getInt("status"));
+        int stock = productObject.getInt("stock");
+        String productId = productObject.getString("productId");
+
+        return new BranchProduct(Inventory.findProductById(productId), stock, status);
     }
 }
