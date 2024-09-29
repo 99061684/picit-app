@@ -24,6 +24,12 @@ public class GlobalConfig {
     public static final Boolean SAVE_PRODUCTS_AFTER_DELETE = false;
     public static final Boolean SAVE_SHOPPINGLIST = false;
     public static final Boolean LOAD_SHOPPINGLIST = false;
+    public static final Boolean SAVE_BRANCHES_AFTER_CREATE = true;
+    public static final Boolean SAVE_BRANCHES_AFTER_CHANGE = true;
+    public static final Boolean SAVE_BRANCHES_AFTER_DELETE = false;
+    public static final Boolean SAVE_BRANCH_PRODUCTS_AFTER_CREATE = true;
+    public static final Boolean SAVE_BRANCH_PRODUCTS_AFTER_CHANGE = true;
+    public static final Boolean SAVE_BRANCH_PRODUCTS_AFTER_DELETE = false;
 
     // console output
     public static final Boolean EMPTY_FILE_ERROR_CONSOLE = true;
