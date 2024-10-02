@@ -1,6 +1,10 @@
 package com.pickmin.controllers;
 
+import java.util.HashMap;
+
 import com.pickmin.customJavaFX.ActionButtonTableCellFactory;
+import com.pickmin.customJavaFX.SearchableCheckComboBox;
+import com.pickmin.logic.Branch;
 import com.pickmin.logic.FormattingHelper;
 import com.pickmin.logic.Inventory;
 import com.pickmin.logic.Product;
@@ -15,6 +19,8 @@ import javafx.scene.control.TextField;
 
 public class ProductOverviewController {
 
+    @FXML
+    private SearchableCheckComboBox<Branch> branchSelector;
     @FXML
     private TextField searchField;
     @FXML
@@ -63,6 +69,19 @@ public class ProductOverviewController {
 
         fillProductTable();
         productTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        // HashMap<String, Branch> branchHashMap = new HashMap<>();
+        // for (Branch branch : BranchManagement.getBranches()) {
+        //     branchHashMap.put(branch.getName(), branch);
+        // }
+
+        HashMap<String, Branch> branchHashMap = new HashMap<>();
+        Branch testBranch1 = new Branch("1", "branch1", "land", "stad", "postcode", "straat", 0);
+        Branch testBranch2 = new Branch("2", "branch2", "land", "stad", "postcode", "straat", 0);
+        branchHashMap.put(testBranch1.getName(), testBranch1);
+        branchHashMap.put(testBranch2.getName(), testBranch2);
+        
+        branchSelector.setValueHashMap(branchHashMap);
     }
 
     // vult de productTable met data. Kan gebruikt worden om de data in de

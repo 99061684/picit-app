@@ -2,6 +2,8 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import com.pickmin.customJavaFX.CustomSelector ?>
+<?import com.pickmin.customJavaFX.SearchableCheckComboBox ?>
 
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.pickmin.controllers.ProductOverviewController" styleClass="page-vbox-container">
 
@@ -11,10 +13,26 @@
     <VBox styleClass="vbox-container">
         <Label text="%product.overview" styleClass="label-title" />
 
-        <HBox styleClass="product-overview-filters-hbox-container">
+        <!-- <HBox styleClass="product-overview-filters-hbox-container">
             <TextField fx:id="searchField" promptText="%product.search" />
             <Button text="%product.button.search" onAction="#handleSearch" />
-        </HBox>
+        </HBox> -->
+
+        <VBox spacing="10">
+            <SearchableCheckComboBox fx:id="branchSelector" selectAllOption="false"/>
+            <!-- <CustomSelector fx:id="branchSelector" labelText="%branch.select" allowMultipleSelection="true" selectAllOption="true" showSearchField="true"/> -->
+            <!-- <CustomSelector fx:id="branchSelector" labelText="%branch.select" allowMultipleSelection="false" /> -->
+            <TextField fx:id="productNameFilter" promptText="%product.searchByName" />
+            <CustomSelector fx:id="statusSelector" labelText="%status.select" allowMultipleSelection="true" />
+            <CustomSelector fx:id="seasonSelector" labelText="%season.select" allowMultipleSelection="true" />
+            <CustomSelector fx:id="originSelector" labelText="%origin.select" allowMultipleSelection="true" />
+            <HBox spacing="10">
+                <TextField fx:id="minPriceFilter" promptText="%price.min" />
+                <TextField fx:id="maxPriceFilter" promptText="%price.max" />
+            </HBox>
+            <!-- <Button text="%filter.apply" onAction="#applyFilters" /> -->
+        </VBox>
+
 
         <TableView fx:id="productTable">
             <columns>
