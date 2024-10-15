@@ -1,6 +1,11 @@
 package com.pickmin.logic;
 
 import java.security.SecureRandom;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.UUID;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -32,13 +37,6 @@ public class Validation {
             throw new MissingFieldException(fieldKey);
         }
     }
-
-    // Validatie voor zoeken (zoekveld mag niet leeg zijn)
-    // public static void validateSearchQuery(String input) throws InvalidInputException {
-    //     if (input == null || input.trim().isEmpty()) {
-    //         throw new InvalidInputException("validation.invalidSearchQuery");
-    //     }
-    // }
 
     // Validatie voor gebruikersnaam en wachtwoord bij inloggen
     public static void validateProduct(String name, boolean isAvailable, String ripeningDate, String season, Integer stock, Double price) throws MissingFieldException, InvalidInputException, ExistingProductException {
@@ -82,9 +80,7 @@ public class Validation {
         return s.length() - 1 - index;
     }
 
-    // Validatie voor gebruikersnaam en wachtwoord bij inloggen
-    public static void validateLogin(String username, String password)
-            throws MissingFieldException, InvalidInputException {
+    public static void validateLogin(String username, String password) throws MissingFieldException, InvalidInputException {
         if (username == null || username.trim().isEmpty()) {
             throw new MissingFieldException(FieldKey.USERNAME);
         }
@@ -98,10 +94,9 @@ public class Validation {
         }
     }
 
-    // Validatie voor account aanmaken
     public static void validateAccountCreation(String username, String password)
             throws MissingFieldException, InvalidInputException {
-        validateLogin(username, password); // Hergebruik validatie voor login
+        validateLogin(username, password);
     }
 
     public static String encodePassword(String password) {
@@ -114,5 +109,26 @@ public class Validation {
     public static boolean checkEncodedPassword(String password, String encodedPassword) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(bcryptStrength, new SecureRandom());
         return bCryptPasswordEncoder.matches(password, encodedPassword);
+    }
+
+    public static String generateID() {
+        return UUID.randomUUID().toString();
+    }
+
+    public static String getTodayDate() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate localDate = LocalDate.now();
+        return dtf.format(localDate);
+    }
+
+    public static boolean isValidAddressFormat(String address) {
+        // Regex voor adrescontrole: straat huisnummer, postcode en stad
+        String addressRegex = "^[A-Za-z\\s]+\\d+[,\\s]+\\d{4}\\s?[A-Z]{2}\\s[A-Za-z\\s]+$";
+
+        return address.matches(addressRegex);
+    }
+
+    public static ArrayList<String> createArrayListWithValues(String... values) {
+        return new ArrayList<String>(Arrays.asList(values));
     }
 }

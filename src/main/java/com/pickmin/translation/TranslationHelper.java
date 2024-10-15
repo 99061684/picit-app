@@ -24,7 +24,6 @@ public class TranslationHelper {
         defaultBundle = ResourceBundle.getBundle("com.pickmin.translation.translation", defaultLocale);
     }
 
-    // Haal een vertaling op, gebruik de standaardtaal als de sleutel niet bestaat
     public static String get(String key) {
         try {
             return bundle.getString(key);
@@ -38,7 +37,6 @@ public class TranslationHelper {
         }
     }
 
-    // Methode om een vertaling op te halen met dynamische waarden (zoals een key die wordt meegegeven)
     public static String get(String key, Object... args) {
         String translation = null;
         try {

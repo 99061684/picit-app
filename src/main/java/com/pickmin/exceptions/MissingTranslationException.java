@@ -9,15 +9,15 @@ import javafx.fxml.LoadException;
 public class MissingTranslationException extends Exception {
 
     public MissingTranslationException(String missingResource) {
-        super(TranslationHelper.get("validation.MissingTranslationException", missingResource));
+        super(TranslationHelper.get("warning.MissingTranslationException", missingResource));
     }
 
     public MissingTranslationException(LoadException loadException) {
-        super(TranslationHelper.get("validation.MissingTranslationException", extractMissingResource(loadException)));
+        super(TranslationHelper.get("warning.MissingTranslationException", extractMissingResource(loadException)));
     }
 
     public MissingTranslationException(MissingResourceException missingResourceException) {
-        super(TranslationHelper.get("validation.MissingTranslationException", missingResourceException.getKey()));
+        super(TranslationHelper.get("warning.MissingTranslationException", missingResourceException.getKey()));
     }
 
     // Hulpmethode om de ontbrekende resource uit de foutmelding te halen

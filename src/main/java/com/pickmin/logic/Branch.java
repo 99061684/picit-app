@@ -1,22 +1,24 @@
 package com.pickmin.logic;
 
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
 public class Branch {
     private String id;
     private String name;
-    private String country;
+    private String province;
     private String city;
-    private String postalCode;
-    private String street;
-    private int streetNumber;
+    private String address;
 
-    public Branch(String id, String name, String country, String city, String postalCode, String street, int streetNumber) {
+    private ArrayList<BranchProduct> branchProducts;
+
+    public Branch(String id, String name, String province, String city, String address, ArrayList<BranchProduct> branchProducts) {
         this.id = id;
         this.name = name;
-        this.country = country;
+        this.province = province;
         this.city = city;
-        this.postalCode = postalCode;
-        this.street = street;
-        this.streetNumber = streetNumber;
+        this.address = address;
+        setBranchProducts(branchProducts);
     }
 
     // Getters en Setters
@@ -24,55 +26,38 @@ public class Branch {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
+    public String getProvince() {
+        return province;
     }
 
     public String getCity() {
         return city;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public String getAddress() {
+        return address;
     }
 
-    public String getPostalCode() {
-        return postalCode;
+    public ArrayList<BranchProduct> getBranchProducts() {
+        return branchProducts;
     }
 
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
+    public void setBranchProducts(ArrayList<BranchProduct> branchProducts) {
+        if (branchProducts == null) {
+            this.branchProducts = new ArrayList<>();
+        } else {
+            this.branchProducts = branchProducts;
+        }
     }
 
-    public String getStreet() {
-        return street;
+    public ArrayList<String> getBranchProductsIdArrayList() {
+        if (branchProducts.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return new ArrayList<String>(branchProducts.stream().map(branchProduct -> branchProduct.getId()).collect(Collectors.toList()));
     }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public int getStreetNumber() {
-        return streetNumber;
-    }
-
-    public void setStreetNumber(int streetNumber) {
-        this.streetNumber = streetNumber;
-    }    
 }

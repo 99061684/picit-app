@@ -53,10 +53,6 @@ public abstract class User {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public boolean comparePassword(String otherPassword) {
         return Validation.checkEncodedPassword(otherPassword, this.password);
     }

@@ -19,7 +19,6 @@ public class BranchManagement {
     }
 
     public static void updateBranch(Branch branch) {
-        // Vind de branch en update de informatie
         for (int i = 0; i < branches.size(); i++) {
             if (branches.get(i).getId().equals(branch.getId())) {
                 branches.set(i, branch);

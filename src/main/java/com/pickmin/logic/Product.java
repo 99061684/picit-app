@@ -1,11 +1,9 @@
 package com.pickmin.logic;
 
-import java.util.UUID;
+import java.util.ArrayList;
 
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,47 +12,61 @@ import javafx.beans.property.StringProperty;
 public class Product {
     private String id;
     private String name;
-    private boolean isAvailable;
+    private String description;
+    private String origin;
     private String ripeningDate;
     private int timesViewed;
-    private String season;
-    private int stock;
+    private ArrayList<String> seasons;
+    private int stockNL;
     private double price;
 
-    public Product(String id, String name, boolean isAvailable, String ripeningDate, int timesViewed, String season, int stock, double price) {
+    private ProductCategorie categorie;
+
+    public Product(String id, String name, String description, String origin, String ripeningDate, int timesViewed, ArrayList<String> seasons, int stockNL, double price, ProductCategorie categorie) {
         this.id = id;
         this.name = name;
-        this.isAvailable = isAvailable;
+        this.description = description;
+        this.origin = origin;
         this.ripeningDate = ripeningDate;
-        this.season = season;
         this.timesViewed = timesViewed;
-        this.stock = stock;
+        this.seasons = seasons;
+        this.stockNL = stockNL;
         this.price = price;
+        this.categorie = categorie;
     }
 
-    public Product(String name, boolean isAvailable, String ripeningDate, String season, int stock, double price) {
-        this(UUID.randomUUID().toString(), name, isAvailable, ripeningDate, 0, season, stock, price);
-    }
-
-    public Product(String id, String name, boolean isAvailable, String ripeningDate, String season, int stock, double price) {
-        this(id, name, isAvailable, ripeningDate, 0, season, stock, price);
-    }
-
-    public Product(String name, boolean isAvailable, String ripeningDate, int timesViewed, String season, int stock, double price) {
-        this(UUID.randomUUID().toString(), name, isAvailable, ripeningDate, timesViewed, season, stock, price);
+    public Product(String id) {
+        this.id = id;
+        this.seasons = new ArrayList<>();
     }
 
     // Getters en Setters
+    public String getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }
 
-    public boolean isAvailable() {
-        return isAvailable;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public boolean checkAvailable() {
-        return this.isAvailable && this.stock > 0;
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(String origin) {
+        this.origin = origin;
     }
 
     public String getRipeningDate() {
@@ -73,25 +85,25 @@ public class Product {
         this.timesViewed++;
     }
 
-    public String getSeason() {
-        return season;
+    public String getSeasons() {
+        return String.join(", ", this.seasons);
     }
 
-    public void setSeason(String season) {
-        this.season = season;
+    public ArrayList<String> getSeasonsArrayList() {
+        return this.seasons;
     }
 
-    public int getStock() {
-        return stock;
+    public void setSeasons(ArrayList<String> seasons) {
+        this.seasons = seasons;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public int getStockNL() {
+        return this.stockNL;
     }
 
-    public void setStock(int stock) {
-        if (stock >= 0) {
-            this.stock = stock;
+    public void setStockNL(int stockNL) {
+        if (stockNL >= 0) {
+            this.stockNL = stockNL;
         }
     }
 
@@ -105,25 +117,21 @@ public class Product {
         }
     }
 
-    public void setAvailability(boolean available) {
-        this.isAvailable = available;
+    public String getCategorie() {
+        return categorie.getName();
     }
 
-    public String getId() {
-        return id;
+    public ProductCategorie getCategorieObject() {
+        return categorie;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setCategorie(ProductCategorie categorie) {
+        this.categorie = categorie;
     }
 
     // Getters voor JavaFX Properties
     public StringProperty getNameProperty() {
         return new SimpleStringProperty(this.name);
-    }
-
-    public BooleanProperty getAvailabilityProperty() {
-        return new SimpleBooleanProperty(this.isAvailable);
     }
 
     public StringProperty getRipeningDateProperty() {
@@ -135,11 +143,11 @@ public class Product {
     }
 
     public StringProperty getSeasonProperty() {
-        return new SimpleStringProperty(this.season);
+        return new SimpleStringProperty(this.getSeasons());
     }
 
     public IntegerProperty getStockProperty() {
-        return new SimpleIntegerProperty(this.stock);
+        return new SimpleIntegerProperty(this.getStockNL());
     }
 
     public DoubleProperty getPriceProperty() {

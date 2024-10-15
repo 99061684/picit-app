@@ -42,13 +42,21 @@ public enum ProductStatus {
         return available;
     }
 
-    // Haal status op via ID
     public static ProductStatus getById(int id) {
         for (ProductStatus status : values()) {
             if (status.id == id) {
                 return status;
             }
         }
-        return UNKNOWN; // Fallback naar UNKNOWN als ID niet wordt herkend
+        return null;
+    }
+
+    public static ProductStatus getByName(String name) {
+        for (ProductStatus status : values()) {
+            if (status.nameNl.equals(name) || status.nameEn.equals(name)) {
+                return status;
+            }
+        }
+        return null;
     }
 }

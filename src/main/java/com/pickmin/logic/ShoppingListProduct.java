@@ -1,5 +1,7 @@
 package com.pickmin.logic;
 
+import java.util.ArrayList;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -9,7 +11,12 @@ public class ShoppingListProduct extends Product {
     private int amountInShoppingList;
 
     public ShoppingListProduct(Product product, int amountInShoppingList) {
-        super(product.getId(), product.getName(), product.isAvailable(), product.getRipeningDate(), product.getTimesViewed(), product.getSeason(), product.getStock(), product.getPrice());
+        super(product.getId(), product.getName(), product.getDescription(), product.getOrigin(), product.getRipeningDate(), product.getTimesViewed(), product.getSeasonsArrayList(), product.getStockNL(), product.getPrice(), product.getCategorieObject());
+        this.amountInShoppingList = amountInShoppingList;
+    }
+
+    public ShoppingListProduct(String id, String name, String description, String origin, String ripeningDate, int timesViewed, ArrayList<String> seasons, int stockNL, double price, ProductCategorie categorie, int amountInShoppingList) {
+        super(id, name, description, origin, ripeningDate, timesViewed, seasons, stockNL, price, categorie);
         this.amountInShoppingList = amountInShoppingList;
     }
 
