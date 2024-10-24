@@ -1,4 +1,4 @@
-package com.pickmin.logic;
+package com.pickmin.logic.json;
 
 import java.util.ArrayList;
 

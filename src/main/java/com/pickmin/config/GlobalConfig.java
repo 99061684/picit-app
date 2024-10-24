@@ -13,14 +13,20 @@ public class GlobalConfig {
     private static final Properties properties;
 
     // Bestandslocaties
-    public static String OUTSIDE_DATA_FILE_PATH;
+    public static String EXTERN_DATA_FILE_PATH;
     public static String DATA_FILE_PATH;
+
     public static String USERS_FILE_PATH;
     public static String PRODUCTS_FILE_PATH;
+    public static String SHOPPINGLIST_FILE_PATH;
+    public static String BRANCHES_FILE_PATH;    
+
     public static String EXTERN_PRODUCTS_FILE_PATH;
     public static String EXTERN_BRANCHES_FILE_PATH;
+
     public static String TEST_PRODUCTS_FILE_PATH;
     public static String TEST_BRANCHES_FILE_PATH;
+    public static String TEST_SHOPPINGLIST_FILE_PATH;
 
     // functionaliteiten
     public static final Boolean SAVE_PRODUCTS_AFTER_CREATE = true;
@@ -34,6 +40,9 @@ public class GlobalConfig {
     public static final Boolean SAVE_BRANCH_PRODUCTS_AFTER_CREATE = true;
     public static final Boolean SAVE_BRANCH_PRODUCTS_AFTER_CHANGE = true;
     public static final Boolean SAVE_BRANCH_PRODUCTS_AFTER_DELETE = false;
+
+    public static final Boolean TEST_SAVE_SHOPPINGLIST = false;
+    public static final Boolean TEST_IMPORT_BRANCHES = false;
 
     // console output
     public static final Boolean EMPTY_FILE_ERROR_CONSOLE = true;
@@ -67,14 +76,20 @@ public class GlobalConfig {
     }
 
     public static void configureVariables() {
-        OUTSIDE_DATA_FILE_PATH = getConfigurationValue("GlobalConfig.OUTSIDE_DATA_FILE_PATH");
+        EXTERN_DATA_FILE_PATH = getConfigurationValue("GlobalConfig.EXTERN_DATA_FILE_PATH");
         DATA_FILE_PATH = getConfigurationValue("GlobalConfig.DATA_FILE_PATH");
+
         USERS_FILE_PATH = DATA_FILE_PATH + "users.json";
         PRODUCTS_FILE_PATH = DATA_FILE_PATH + "products.json";
-        EXTERN_PRODUCTS_FILE_PATH = OUTSIDE_DATA_FILE_PATH + "vruchtenlijst.json";
-        EXTERN_BRANCHES_FILE_PATH = OUTSIDE_DATA_FILE_PATH + "vestigingen.json";
+        SHOPPINGLIST_FILE_PATH = DATA_FILE_PATH + "shoppingLists.json";
+        BRANCHES_FILE_PATH = DATA_FILE_PATH + "vestigingen.json";
+
+        EXTERN_PRODUCTS_FILE_PATH = EXTERN_DATA_FILE_PATH + "vruchtenlijst.json";
+        EXTERN_BRANCHES_FILE_PATH = EXTERN_DATA_FILE_PATH + "vestigingen.json";
+
         TEST_PRODUCTS_FILE_PATH = DATA_FILE_PATH + "test-products.json";
         TEST_BRANCHES_FILE_PATH = DATA_FILE_PATH + "test-vestigingen.json";
+        TEST_SHOPPINGLIST_FILE_PATH = DATA_FILE_PATH + "test-shoppingLists.json";
     }
 
     public static void loadSecretConfigurationFile() {

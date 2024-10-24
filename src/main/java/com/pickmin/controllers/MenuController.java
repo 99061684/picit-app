@@ -3,10 +3,10 @@ package com.pickmin.controllers;
 import java.io.IOException;
 
 import com.pickmin.App;
-import com.pickmin.logic.Customer;
-import com.pickmin.logic.Employee;
-import com.pickmin.logic.User;
-import com.pickmin.logic.UserManagement;
+import com.pickmin.logic.model.Customer;
+import com.pickmin.logic.model.Employee;
+import com.pickmin.logic.model.User;
+import com.pickmin.logic.model.UserManagement;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;

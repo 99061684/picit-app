@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.SearchableComboBox?>
 
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.pickmin.controllers.ProductOverviewController" styleClass="page-vbox-container">
 
@@ -12,6 +13,7 @@
         <Label text="%product.overview" styleClass="label-title" />
 
         <HBox styleClass="product-overview-filters-hbox-container">
+            <SearchableComboBox fx:id="cityComboBox" />
             <TextField fx:id="searchField" promptText="%product.search" />
             <Button text="%product.button.search" onAction="#handleSearch" />
         </HBox>

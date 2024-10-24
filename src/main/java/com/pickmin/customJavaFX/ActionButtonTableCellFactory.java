@@ -6,13 +6,14 @@ import java.util.HashMap;
 import com.pickmin.App;
 import com.pickmin.controllers.ProductOverviewController;
 import com.pickmin.exceptions.InvalidParametersControllerException;
-import com.pickmin.logic.Customer;
-import com.pickmin.logic.Employee;
-import com.pickmin.logic.Inventory;
-import com.pickmin.logic.Product;
-import com.pickmin.logic.ShoppingList;
-import com.pickmin.logic.User;
-import com.pickmin.logic.UserManagement;
+import com.pickmin.logic.model.BranchProduct;
+import com.pickmin.logic.model.Customer;
+import com.pickmin.logic.model.Employee;
+import com.pickmin.logic.model.Product;
+import com.pickmin.logic.model.ProductStatus;
+import com.pickmin.logic.model.ShoppingList;
+import com.pickmin.logic.model.User;
+import com.pickmin.logic.model.UserManagement;
 import com.pickmin.translation.TranslationHelper;
 
 import javafx.scene.control.Button;
@@ -21,22 +22,17 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 
-public class ActionButtonTableCellFactory implements Callback<TableColumn<Product, Void>, TableCell<Product, Void>> {
+public class ActionButtonTableCellFactory implements Callback<TableColumn<BranchProduct, Void>, TableCell<BranchProduct, Void>> {
     private final ShoppingList shoppingList;
     private final ProductOverviewController controller;
 
     public ActionButtonTableCellFactory(ProductOverviewController controller) {
-        User loggedInUser = UserManagement.getLoggedInUser();
-        if (loggedInUser instanceof Customer) {
-            this.shoppingList = ((Customer) loggedInUser).getShoppingList();
-        } else {
-            this.shoppingList = null;
-        }
+        this.shoppingList = UserManagement.getLoggedInUserShoppingList();
         this.controller = controller;
     }
 
     @Override
-    public TableCell<Product, Void> call(final TableColumn<Product, Void> param) {
+    public TableCell<BranchProduct, Void> call(final TableColumn<BranchProduct, Void> param) {
         return new TableCell<>() {
             private final Button addButton = new Button(TranslationHelper.get("product.action.add.shoppinglist"));
             private final Button viewButton = new Button(TranslationHelper.get("product.action.view"));
@@ -71,20 +67,21 @@ public class ActionButtonTableCellFactory implements Callback<TableColumn<Produc
 
             // Button actie: Product toevoegen aan shoppinglist
             private void handleAddToShoppingList() {
-                Product product = getTableView().getItems().get(getIndex());
+                BranchProduct product = getTableView().getItems().get(getIndex());
                 if (shoppingList != null) {
-                    if (product.checkAvailable()) {
+                    ProductStatus productStatus = product.getStatus();
+                    if (productStatus.isAvailable()) {
                         shoppingList.addProduct(product);
                         System.out.println("Product toegevoegd aan shoppinglist");
                     } else {
-                        System.out.println("Product is niet beschikbaar of uit voorraad.");
+                        System.out.println(TranslationHelper.get(productStatus.getTranslationKey()));
                     }
                 }
             }
 
             // Button actie: Product bekijken
             private void handleViewProduct() {
-                Product product = getTableView().getItems().get(getIndex());
+                BranchProduct product = getTableView().getItems().get(getIndex());
                 if (product != null) {
                     product.increaseTimesViewed();
                     controller.fillProductTable();
@@ -94,7 +91,7 @@ public class ActionButtonTableCellFactory implements Callback<TableColumn<Produc
 
             // Button actie: Product aanpassen
             private void handleEditProduct() {
-                Product product = getTableView().getItems().get(getIndex());
+                BranchProduct product = getTableView().getItems().get(getIndex());
                 if (product != null) {
                     goToEditProductPage(product);
                 }
@@ -102,19 +99,22 @@ public class ActionButtonTableCellFactory implements Callback<TableColumn<Produc
 
             // Button actie: Product verwijderen
             private void handleDeleteProduct() {
-                Product product = getTableView().getItems().get(getIndex());
-                if (product != null) {
-                    Inventory.removeProduct(product);
-                    controller.fillProductTable();
-                    System.out.println("Product verwijderd: " + product.getName());
-                }
+                throw new UnsupportedOperationException("Unimplemented method 'handleDeleteProduct'");
+                // BranchProduct product = getTableView().getItems().get(getIndex());
+                // if (product != null) {
+                //     Inventory.removeProduct(product);
+                //     controller.fillProductTable();
+                //     System.out.println("Product verwijderd: " + product.getName());
+                // }
             }
 
             private void addButtonStyling(Button addButton) {
-                Product product = getTableView().getItems().get(getIndex());
+                BranchProduct product = getTableView().getItems().get(getIndex());
                 addButton.getStyleClass().removeAll("button-unavailable", "button-available");
                 addButton.setDisable(false);
-                if (product.checkAvailable()) {
+
+                ProductStatus productStatus = product.getStatus();
+                if (productStatus.isAvailable()) {
                     addButton.getStyleClass().add("button-available");
                     addButton.setDisable(false);
                 } else {

@@ -1,4 +1,4 @@
-package com.pickmin.logic;
+package com.pickmin.logic.model;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -58,6 +58,6 @@ public class Branch {
         if (branchProducts.isEmpty()) {
             return new ArrayList<>();
         }
-        return new ArrayList<String>(branchProducts.stream().map(branchProduct -> branchProduct.getId()).collect(Collectors.toList()));
+        return branchProducts.stream().map(branchProduct -> branchProduct.getId()).collect(Collectors.toCollection(ArrayList::new));
     }
 }

@@ -3,11 +3,11 @@ package com.pickmin.customJavaFX;
 import java.util.Optional;
 
 import com.pickmin.controllers.ShoppingListController;
-import com.pickmin.logic.Customer;
-import com.pickmin.logic.ShoppingList;
-import com.pickmin.logic.ShoppingListProduct;
-import com.pickmin.logic.User;
-import com.pickmin.logic.UserManagement;
+import com.pickmin.logic.model.Customer;
+import com.pickmin.logic.model.ShoppingList;
+import com.pickmin.logic.model.ShoppingListProduct;
+import com.pickmin.logic.model.User;
+import com.pickmin.logic.model.UserManagement;
 import com.pickmin.translation.TranslationHelper;
 
 import javafx.scene.control.Button;

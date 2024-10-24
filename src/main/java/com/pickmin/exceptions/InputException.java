@@ -1,6 +1,6 @@
 package com.pickmin.exceptions;
 
-import com.pickmin.logic.FieldKey;
+import com.pickmin.logic.validation.FieldKey;
 
 public abstract class InputException extends Exception {
     private final FieldKey fieldKey;

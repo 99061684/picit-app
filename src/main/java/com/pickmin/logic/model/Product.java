@@ -1,6 +1,9 @@
-package com.pickmin.logic;
+package com.pickmin.logic.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+
+import com.pickmin.logic.general.UtilityFunctions;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -14,25 +17,27 @@ public class Product {
     private String name;
     private String description;
     private String origin;
-    private String ripeningDate;
+    private LocalDate ripeningDate;
     private int timesViewed;
     private ArrayList<String> seasons;
     private int stockNL;
     private double price;
 
     private ProductCategorie categorie;
+    private ProductUnit unit;
 
-    public Product(String id, String name, String description, String origin, String ripeningDate, int timesViewed, ArrayList<String> seasons, int stockNL, double price, ProductCategorie categorie) {
+    public Product(String id, String name, String description, String origin, Object ripeningDate, int timesViewed, ArrayList<String> seasons, int stockNL, double price, ProductCategorie categorie, ProductUnit unit) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.origin = origin;
-        this.ripeningDate = ripeningDate;
+        setRipeningDate(ripeningDate);
         this.timesViewed = timesViewed;
-        this.seasons = seasons;
+        setSeasons(seasons);
         this.stockNL = stockNL;
         this.price = price;
         this.categorie = categorie;
+        this.unit = unit;
     }
 
     public Product(String id) {
@@ -49,32 +54,38 @@ public class Product {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getDescription() {
         return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getOrigin() {
         return origin;
     }
 
-    public void setOrigin(String origin) {
-        this.origin = origin;
+    public String getRipeningDate() {
+        return UtilityFunctions.localDateToString(this.ripeningDate);
     }
 
-    public String getRipeningDate() {
-        return ripeningDate;
+    public LocalDate getRipeningDateAsLocalDate() {
+        return this.ripeningDate;
+    }
+
+    public void setRipeningDate(Object ripeningDate) {
+        if (ripeningDate instanceof LocalDate) {
+            setRipeningDate((LocalDate) ripeningDate);
+        } else if (ripeningDate instanceof String) {
+            setRipeningDate((String) ripeningDate);
+        } else {
+            throw new IllegalArgumentException("Invalid type for ripeningDate");
+        }
+    }
+
+    public void setRipeningDate(LocalDate ripeningDate) {
+        this.ripeningDate = ripeningDate;
     }
 
     public void setRipeningDate(String ripeningDate) {
-        this.ripeningDate = ripeningDate;
+        this.ripeningDate = UtilityFunctions.stringToLocalDate(ripeningDate);
     }
 
     public int getTimesViewed() {
@@ -94,7 +105,7 @@ public class Product {
     }
 
     public void setSeasons(ArrayList<String> seasons) {
-        this.seasons = seasons;
+        this.seasons = UtilityFunctions.cleanStringArrayList(seasons);
     }
 
     public int getStockNL() {
@@ -104,6 +115,8 @@ public class Product {
     public void setStockNL(int stockNL) {
         if (stockNL >= 0) {
             this.stockNL = stockNL;
+        } else {
+            throw new IllegalArgumentException("Minimum is 0");
         }
     }
 
@@ -114,6 +127,8 @@ public class Product {
     public void setPrice(double price) {
         if (price >= 0) {
             this.price = price;
+        } else {
+            throw new IllegalArgumentException("Minimum is 0");
         }
     }
 
@@ -129,13 +144,17 @@ public class Product {
         this.categorie = categorie;
     }
 
+    public ProductUnit getUnit() {
+        return unit;
+    }
+
     // Getters voor JavaFX Properties
     public StringProperty getNameProperty() {
         return new SimpleStringProperty(this.name);
     }
 
     public StringProperty getRipeningDateProperty() {
-        return new SimpleStringProperty(this.ripeningDate);
+        return new SimpleStringProperty(this.getRipeningDate());
     }
 
     public IntegerProperty getTimesViewedProperty() {
@@ -146,7 +165,7 @@ public class Product {
         return new SimpleStringProperty(this.getSeasons());
     }
 
-    public IntegerProperty getStockProperty() {
+    public IntegerProperty getStockNLProperty() {
         return new SimpleIntegerProperty(this.getStockNL());
     }
 

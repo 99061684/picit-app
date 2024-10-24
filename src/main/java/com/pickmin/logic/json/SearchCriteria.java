@@ -1,4 +1,4 @@
-package com.pickmin.logic;
+package com.pickmin.logic.json;
 
 public class SearchCriteria {
     private String searchField;

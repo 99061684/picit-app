@@ -1,4 +1,4 @@
-package com.pickmin.logic;
+package com.pickmin.logic.model;
 
 public enum UserType {
     EMPLOYEE("Employee"),

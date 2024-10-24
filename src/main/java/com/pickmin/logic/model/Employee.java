@@ -1,4 +1,4 @@
-package com.pickmin.logic;
+package com.pickmin.logic.model;
 
 import com.pickmin.translation.Language;
 

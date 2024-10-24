@@ -41,6 +41,12 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.18.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>2.9.0</version>
+        </dependency>
         <!-- END JSON dependency -->
 
         <!-- START JUnit 5 for unit testing -->

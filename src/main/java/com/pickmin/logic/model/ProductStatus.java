@@ -1,4 +1,4 @@
-package com.pickmin.logic;
+package com.pickmin.logic.model;
 
 public enum ProductStatus {
     TEMPORARILY_UNAVAILABLE(1, "product.temporarily_unavailable", "Tijdelijk niet leverbaar", "Temporarily unavailable", false),

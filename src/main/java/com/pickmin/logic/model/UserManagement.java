@@ -1,4 +1,4 @@
-package com.pickmin.logic;
+package com.pickmin.logic.model;
 
 import java.util.ArrayList;
 
@@ -6,6 +6,8 @@ import com.pickmin.config.GlobalConfig;
 import com.pickmin.exceptions.ExistingUserException;
 import com.pickmin.exceptions.InvalidInputException;
 import com.pickmin.exceptions.MissingFieldException;
+import com.pickmin.logic.json.JsonHandler;
+import com.pickmin.logic.validation.Validation;
 import com.pickmin.translation.Language;
 
 public class UserManagement {
@@ -22,6 +24,15 @@ public class UserManagement {
     public static User getLoggedInUser() {
         return loggedInUser;
     }
+
+    public static ShoppingList getLoggedInUserShoppingList() {
+        if (loggedInUser.getUserType().equals(UserType.CUSTOMER)) {
+            return ((Customer) loggedInUser).getShoppingList();
+        } 
+        return null;
+    }
+
+        
 
     public static void setLoggedInUser(User loggedInUser) {
         UserManagement.loggedInUser = loggedInUser;

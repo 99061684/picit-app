@@ -1,8 +1,8 @@
-package com.pickmin.logic;
-
-import java.util.UUID;
+package com.pickmin.logic.model;
 
 import com.pickmin.config.GlobalConfig;
+import com.pickmin.logic.general.UtilityFunctions;
+import com.pickmin.logic.validation.Validation;
 import com.pickmin.translation.Language;
 
 public abstract class User {
@@ -19,11 +19,11 @@ public abstract class User {
     }
 
     public User(String username, String password) {
-        this(UUID.randomUUID().toString(), username, password, GlobalConfig.DEFAULT_LANGUAGE);
+        this(UtilityFunctions.generateID(), username, password, GlobalConfig.DEFAULT_LANGUAGE);
     }
 
     public User(String username, String password, Language preferredLanguage) {
-        this(UUID.randomUUID().toString(), username, password, preferredLanguage);
+        this(UtilityFunctions.generateID(), username, password, preferredLanguage);
     }
 
     // Getters and Setters

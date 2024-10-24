@@ -16,11 +16,8 @@
             <TextField fx:id="productNameField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
             <Label fx:id="productNameError" styleClass="form-error-label" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
 
-            <Label text="Beschikbaar:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <CheckBox fx:id="isAvailableCheckbox" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-
             <Label text="Rijpingsdatum:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-            <TextField fx:id="ripeningDateField" GridPane.columnIndex="1" GridPane.rowIndex="2" promptText="YYYY-MM-DD"/>
+            <DatePicker fx:id="ripeningDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="2" promptText="DD-MM-YYYY"/>
             <Label fx:id="ripeningDateError" styleClass="form-error-label" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
 
             <Label text="Seizoen:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>

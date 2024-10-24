@@ -1,4 +1,4 @@
-package com.pickmin.logic;
+package com.pickmin.logic.validation;
 
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;

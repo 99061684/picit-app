@@ -7,9 +7,9 @@ import com.pickmin.config.GlobalConfig;
 import com.pickmin.exceptions.ExistingUserException;
 import com.pickmin.exceptions.InvalidInputException;
 import com.pickmin.exceptions.MissingFieldException;
-import com.pickmin.logic.User;
-import com.pickmin.logic.UserManagement;
-import com.pickmin.logic.UserType;
+import com.pickmin.logic.model.User;
+import com.pickmin.logic.model.UserManagement;
+import com.pickmin.logic.model.UserType;
 import com.pickmin.translation.Language;
 
 import javafx.fxml.FXML;

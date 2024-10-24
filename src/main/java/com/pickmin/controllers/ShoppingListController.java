@@ -2,11 +2,11 @@ package com.pickmin.controllers;
 
 import com.pickmin.customJavaFX.ActionButtonTableCellFactory2;
 import com.pickmin.exceptions.NoAccesException;
-import com.pickmin.logic.Customer;
-import com.pickmin.logic.FormattingHelper;
-import com.pickmin.logic.ShoppingListProduct;
-import com.pickmin.logic.User;
-import com.pickmin.logic.UserManagement;
+import com.pickmin.logic.model.Customer;
+import com.pickmin.logic.model.ShoppingListProduct;
+import com.pickmin.logic.model.User;
+import com.pickmin.logic.model.UserManagement;
+import com.pickmin.logic.validation.FormattingHelper;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -19,8 +19,6 @@ public class ShoppingListController {
     private TableView<ShoppingListProduct> productTable;
     @FXML
     private TableColumn<ShoppingListProduct, String> productNameColumn;
-    @FXML
-    private TableColumn<ShoppingListProduct, Boolean> availabilityColumn;
     @FXML
     private TableColumn<ShoppingListProduct, Integer> amountInShoppingListColumn;
     @FXML
@@ -45,7 +43,6 @@ public class ShoppingListController {
         }
         // Configuratie van de tabelkolommen en initialiseren van de productlijst
         productNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
-        availabilityColumn.setCellValueFactory(cellData -> cellData.getValue().getAvailabilityProperty().asObject());
         amountInShoppingListColumn.setCellValueFactory(cellData -> cellData.getValue().getAmountInShoppingListProperty().asObject());
         priceColumn.setCellValueFactory(cellData -> cellData.getValue().getPriceProperty().asObject());
         totalPriceColumn.setCellValueFactory(cellData -> cellData.getValue().getTotalPriceProperty().asObject());
@@ -53,7 +50,6 @@ public class ShoppingListController {
         actionColumn.setCellFactory(new ActionButtonTableCellFactory2(this));
 
         // Gebruik de FormattingHelper voor de cell factories
-        availabilityColumn.setCellFactory(FormattingHelper.availabilityCellFactory());
         priceColumn.setCellFactory(FormattingHelper.priceCellFactory());
         totalPriceColumn.setCellFactory(FormattingHelper.priceCellFactory());
 
@@ -65,7 +61,7 @@ public class ShoppingListController {
 
     // vult de productTable met data. Kan gebruikt worden om de data in de productTable te herladen na een aanpassing bij de data.
     public void fillShoppingListProductTable() {
-        productTable.setItems(this.customer.getShoppingList().getShoppingItemsObservableList());
+        productTable.setItems(this.customer.getShoppingList().getShoppingListProductsObservableList());
         productTable.refresh();
         setTotalLabel();
     }

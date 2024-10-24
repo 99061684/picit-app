@@ -1,6 +1,7 @@
-package com.pickmin.logic;
+package com.pickmin.logic.model;
 
 import com.pickmin.config.GlobalConfig;
+import com.pickmin.logic.json.JsonHandler;
 import com.pickmin.translation.Language;
 
 public class Customer extends User {
@@ -25,7 +26,7 @@ public class Customer extends User {
         if (GlobalConfig.LOAD_SHOPPINGLIST) {
             this.shoppingList = JsonHandler.loadShoppingListFromJson(this.getId());
         } else {
-            this.shoppingList = new ShoppingList();
+            this.shoppingList = new ShoppingList(this.getId());
         }
     }
 

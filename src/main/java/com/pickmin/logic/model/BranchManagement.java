@@ -1,14 +1,19 @@
-package com.pickmin.logic;
+package com.pickmin.logic.model;
 
 import java.util.List;
 
 import com.pickmin.config.GlobalConfig;
+import com.pickmin.logic.json.JsonHandler;
 
 public class BranchManagement {
     private static List<Branch> branches;
 
     static {
         branches = JsonHandler.loadBranchesFromJson();
+    }
+
+    public static void getBranchCities() {
+        
     }
 
     public static void addBranch(Branch branch) {
