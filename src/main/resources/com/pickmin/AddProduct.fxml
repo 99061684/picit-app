@@ -9,33 +9,45 @@
     <fx:include source="Menu.fxml"/>
 
     <VBox styleClass="vbox-container">
-        <Label text="Voeg Nieuw Product Toe" styleClass="label-title"/>
+        <Label text="%title.product.add" styleClass="label-title"/>
 
-        <GridPane styleClass="form-GridPane">
-            <Label text="Productnaam:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <GridPane fx:id="formGridPane" styleClass="form-GridPane">
+            <Label text="%field.product.name" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
             <TextField fx:id="productNameField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-            <Label fx:id="productNameError" styleClass="form-error-label" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+            <Label fx:id="productNameError" styleClass="form-error-label" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2"/>
 
-            <Label text="Rijpingsdatum:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-            <DatePicker fx:id="ripeningDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="2" promptText="DD-MM-YYYY"/>
-            <Label fx:id="ripeningDateError" styleClass="form-error-label" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+            <Label text="%field.product.categorie" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <TextField fx:id="categorieField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <Label fx:id="categorieError" styleClass="form-error-label" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2"/>
 
-            <Label text="Seizoen:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-            <TextField fx:id="seasonField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-            <Label fx:id="seasonError" styleClass="form-error-label" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+            <Label text="%field.product.description" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <TextField fx:id="descriptionField" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+            <Label fx:id="descriptionError" styleClass="form-error-label" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.columnSpan="2"/>
 
-            <Label text="Voorraad:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-            <NumberField value="1" minValue="0" fx:id="stockField" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-            <Label fx:id="stockError" styleClass="form-error-label" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+            <Label text="%field.product.origin" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+            <TextField fx:id="originField" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+            <Label fx:id="originError" styleClass="form-error-label" GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.columnSpan="2"/>
 
-            <Label text="Prijs:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-            <NumberField value="1" minValue="0" decimalPlaces="2" fx:id="priceField" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
-            <Label fx:id="priceError" styleClass="form-error-label" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+            <Label text="%field.product.repeningdate" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+            <DatePicker fx:id="ripeningDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="8" promptText="DD-MM-YYYY"/>
+            <Label fx:id="ripeningDateError" styleClass="form-error-label" GridPane.columnIndex="0" GridPane.rowIndex="9" GridPane.columnSpan="2"/>
+
+            <Label text="%field.product.seasons" GridPane.columnIndex="0" GridPane.rowIndex="10"/>
+            <TextField fx:id="seasonField" GridPane.columnIndex="1" GridPane.rowIndex="10"/>
+            <Label fx:id="seasonError" styleClass="form-error-label" GridPane.columnIndex="0" GridPane.rowIndex="11" GridPane.columnSpan="2"/>
+
+            <Label text="%field.product.stockNL" GridPane.columnIndex="0" GridPane.rowIndex="12"/>
+            <NumberField value="1" minValue="0" fx:id="stockNLField" GridPane.columnIndex="1" GridPane.rowIndex="12"/>
+            <Label fx:id="stockError" styleClass="form-error-label" GridPane.columnIndex="0" GridPane.rowIndex="13" GridPane.columnSpan="2"/>
+
+            <Label text="%field.product.price" GridPane.columnIndex="0" GridPane.rowIndex="14"/>
+            <NumberField value="1" minValue="0" decimalPlaces="2" fx:id="priceField" GridPane.columnIndex="1" GridPane.rowIndex="14"/>
+            <Label fx:id="priceError" styleClass="form-error-label" GridPane.columnIndex="0" GridPane.rowIndex="15" GridPane.columnSpan="2"/>
         </GridPane>
 
         <HBox styleClass="form-button-hbox-container">
-            <Button text="Toevoegen" onAction="#handleAddProduct"/>
-            <Button text="Annuleren" onAction="#handleCancel"/>
+            <Button text="%button.save" onAction="#handleAddProduct"/>
+            <Button text="%button.cancel" onAction="#handleCancel"/>
         </HBox>
     </VBox>
 </VBox>

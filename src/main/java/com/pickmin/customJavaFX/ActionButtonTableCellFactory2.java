@@ -3,10 +3,8 @@ package com.pickmin.customJavaFX;
 import java.util.Optional;
 
 import com.pickmin.controllers.ShoppingListController;
-import com.pickmin.logic.model.Customer;
 import com.pickmin.logic.model.ShoppingList;
 import com.pickmin.logic.model.ShoppingListProduct;
-import com.pickmin.logic.model.User;
 import com.pickmin.logic.model.UserManagement;
 import com.pickmin.translation.TranslationHelper;
 
@@ -22,12 +20,7 @@ public class ActionButtonTableCellFactory2 implements Callback<TableColumn<Shopp
     private final ShoppingListController controller;
 
     public ActionButtonTableCellFactory2(ShoppingListController controller) {
-        User loggedInUser = UserManagement.getLoggedInUser();
-        if (loggedInUser instanceof Customer) {
-            this.shoppingList = ((Customer) loggedInUser).getShoppingList();
-        } else {
-            this.shoppingList = null;
-        }
+        this.shoppingList = UserManagement.getLoggedInUserShoppingList();
         this.controller = controller;
     }
 
@@ -58,7 +51,6 @@ public class ActionButtonTableCellFactory2 implements Callback<TableColumn<Shopp
             private void handleEditShoppingListProduct() {
                 ShoppingListProduct selectedProduct = getTableView().getItems().get(getIndex());
                 if (selectedProduct != null) {
-                    // Maak een TextInputDialog om de nieuwe hoeveelheid op te vragen
                     TextInputDialog dialog = new TextInputDialog();
                     dialog.setTitle("Hoeveelheid Aanpassen");
                     dialog.setHeaderText("Pas de hoeveelheid aan voor " + selectedProduct.getName());
@@ -67,7 +59,6 @@ public class ActionButtonTableCellFactory2 implements Callback<TableColumn<Shopp
                     Optional<String> result = dialog.showAndWait();
                     result.ifPresent(amountString -> {
                         try {
-                            // Zet de invoer om naar een integer en update het product
                             int newAmount = Integer.parseInt(amountString);
                             selectedProduct.setAmountInShoppingList(newAmount);
                         } catch (NumberFormatException e) {
@@ -75,7 +66,6 @@ public class ActionButtonTableCellFactory2 implements Callback<TableColumn<Shopp
                         }
                     });
                 }
-                // shoppingList.addProduct(selectedProduct);
                 controller.fillShoppingListProductTable();
             }
 

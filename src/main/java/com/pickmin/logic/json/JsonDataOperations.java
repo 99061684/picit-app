@@ -321,7 +321,7 @@ class JsonDataOperations {
         if (UtilityFunctions.hashMapContainsAllKeys(productIdentifier, "field", "value")) {
             return JsonDataOperations.getBranchProductFromJsonWithIdentifier(productIdentifier.get("field"), productIdentifier.get("value"));
         } else {
-            throw new IllegalArgumentException("Product identifier must contain 'field' and 'value' keys");
+            throw new IllegalArgumentException("Branch Product identifier must contain 'field' and 'value' keys");
         }
     }
 
@@ -360,7 +360,7 @@ class JsonDataOperations {
     }
 
     // --- writer helper functions ---
-    static void writeCorrespondingToken(JsonToken token, JsonGenerator generator, JsonParser parser) throws IOException {
+    private static void writeCorrespondingToken(JsonToken token, JsonGenerator generator, JsonParser parser) throws IOException {
         if (token == JsonToken.START_OBJECT) {
             generator.writeStartObject();
         } else if (token == JsonToken.END_OBJECT) {

@@ -3,21 +3,17 @@ package com.pickmin.controllers;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-
-import org.controlsfx.control.SearchableComboBox;
 
 import com.pickmin.App;
 import com.pickmin.config.GlobalConfig;
 import com.pickmin.customJavaFX.NumberField;
 import com.pickmin.exceptions.ExistingProductException;
-import com.pickmin.exceptions.InputException;
 import com.pickmin.exceptions.InvalidInputException;
-import com.pickmin.exceptions.InvalidParametersControllerException;
 import com.pickmin.exceptions.MissingFieldException;
 import com.pickmin.logic.general.UtilityFunctions;
 import com.pickmin.logic.json.JsonHandler;
+import com.pickmin.logic.model.ParameterKey;
 import com.pickmin.logic.model.Product;
 import com.pickmin.logic.model.ProductCategorie;
 import com.pickmin.logic.validation.FieldKey;
@@ -33,11 +29,11 @@ public class EditProductController extends ControllerWithParameters {
     @FXML
     private TextField productNameField;
     @FXML
-    private TextField descriptionTextField;
+    private TextField descriptionField;
     @FXML
-    private TextField originTextField;
+    private TextField originField;
     @FXML
-    private SearchableComboBox<ProductCategorie> categorieSearchableComboBox;
+    private TextField categorieField;
     @FXML
     private DatePicker ripeningDatePicker;
     @FXML
@@ -51,6 +47,12 @@ public class EditProductController extends ControllerWithParameters {
     @FXML
     private Label productNameError;
     @FXML
+    private Label descriptionError;
+    @FXML
+    private Label originError;
+    @FXML
+    private Label categorieError;
+    @FXML
     private Label ripeningDateError;
     @FXML
     private Label seasonError;
@@ -59,22 +61,17 @@ public class EditProductController extends ControllerWithParameters {
     @FXML
     private Label priceError;
 
-    private final ArrayList<String> parameterKeys = new ArrayList<>(Arrays.asList("product"));
     private Product product;
 
-    private HashMap<FieldKey, Label> errorFields;
-
     @FXML
-    @Override
-    public void setParameters(HashMap<String, Object> parameters) throws InvalidParametersControllerException {
-        if (checkContainsAllParameters(parameters, parameterKeys) == false) {
-            throw new InvalidParametersControllerException();
-        }
+    private void initialize() {
+        this.product = getParameter(ParameterKey.PRODUCT, Product.class);
+        initializeErrorFields();
 
-        this.product = (Product) parameters.get("product");
-
-        // Vul de velden met de bestaande productgegevens
         productNameField.setText(product.getName());
+        categorieField.setText(product.getCategorie());
+        descriptionField.setText(product.getDescription());
+        originField.setText(product.getOrigin());
         ripeningDatePicker.setValue(product.getRipeningDateAsLocalDate());
         seasonField.setText(product.getSeasons());
         stockNLField.setValue((double) product.getStockNL());
@@ -83,13 +80,17 @@ public class EditProductController extends ControllerWithParameters {
         UtilityFunctions.configureDatePicker(ripeningDatePicker);
     }
 
-    public void initializeErrorFields() {
+    protected void initializeErrorFields() {
         errorFields = new HashMap<>();
         errorFields.put(FieldKey.PRODUCT_NAME, productNameError);
+        errorFields.put(FieldKey.PRODUCT_CATEGORIE, categorieError);
+        errorFields.put(FieldKey.PRODUCT_DESCRIPTION, descriptionError);
+        errorFields.put(FieldKey.PRODUCT_ORIGIN, originError);
         errorFields.put(FieldKey.PRODUCT_RIPENING_DATE, ripeningDateError);
         errorFields.put(FieldKey.PRODUCT_SEASONS, seasonError);
         errorFields.put(FieldKey.PRODUCT_STOCK_NL, stockError);
         errorFields.put(FieldKey.PRODUCT_PRICE, priceError);
+        resetErrorFields();
     }
 
     @FXML
@@ -99,9 +100,9 @@ public class EditProductController extends ControllerWithParameters {
                 throw new NullPointerException();
             }
             String name = productNameField.getText();
-            String description = descriptionTextField.getText();
-            String origin = originTextField.getText();
-            ProductCategorie categorie = categorieSearchableComboBox.getSelectionModel().getSelectedItem();
+            String description = descriptionField.getText();
+            String origin = originField.getText();
+            ProductCategorie categorie = new ProductCategorie(categorieField.getText());
 
             LocalDate ripeningDate = ripeningDatePicker.getValue();
             ArrayList<String> seasons = UtilityFunctions.extractArrayListFromString(seasonField.getText());
@@ -129,15 +130,6 @@ public class EditProductController extends ControllerWithParameters {
             setErrorFields(e);
         } catch (InvalidInputException e) {
             setErrorFields(e);
-        }
-    }
-
-    private void setErrorFields(InputException exception) {
-        Label errorLabel = errorFields.get(exception.getFieldKey());
-        if (errorLabel != null) {
-            errorLabel.setText(exception.getMessage());
-        } else {
-            throw new IllegalArgumentException("No ErrorLabel for: " + exception.getFieldKey() + " in the EditProductController.");
         }
     }
 

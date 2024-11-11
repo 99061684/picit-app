@@ -1,12 +1,12 @@
 package com.pickmin.controllers;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import org.controlsfx.control.SearchableComboBox;
 
 import com.pickmin.customJavaFX.ActionButtonTableCellFactory;
+import com.pickmin.exceptions.CustomIllegalArgumentException;
 import com.pickmin.logic.general.UtilityFunctions;
 import com.pickmin.logic.json.JsonHandler;
 import com.pickmin.logic.model.BranchProduct;
@@ -22,15 +22,18 @@ import com.pickmin.logic.model.filter.BranchFilter;
 import com.pickmin.logic.validation.FormattingHelper;
 import com.pickmin.translation.TranslationHelper;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Region;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 public class ProductOverviewController {
 
@@ -43,7 +46,7 @@ public class ProductOverviewController {
     @FXML
     private TableColumn<BranchProduct, String> productNameColumn;
     @FXML
-    private TableColumn<BranchProduct, ProductStatus> availabilityColumn;
+    private TableColumn<BranchProduct, ProductStatus> productStatusColumn;
     @FXML
     private TableColumn<BranchProduct, Integer> timesViewedColumn;
     @FXML
@@ -55,15 +58,14 @@ public class ProductOverviewController {
     @FXML
     private TableColumn<BranchProduct, Void> actionColumn;
 
-    public ProductOverviewController() {
-    }
+    private String lastSelectedCity;
+    private static final int maxProductsToShow = 5;
 
     @FXML
     private void initialize() {
         // Configuratie van de tabelkolommen en initialiseren van de productlijst
         productNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
-        // availabilityColumn.setCellValueFactory(cellData -> cellData.getValue().getAvailabilityProperty().asObject());
-        availabilityColumn.setCellValueFactory(cellData -> cellData.getValue().getStatusProperty());
+        productStatusColumn.setCellValueFactory(cellData -> cellData.getValue().getStatusProperty());
         timesViewedColumn.setCellValueFactory(cellData -> cellData.getValue().getTimesViewedProperty().asObject());
         seasonColumn.setCellValueFactory(cellData -> cellData.getValue().getSeasonProperty());
         stockColumn.setCellValueFactory(cellData -> cellData.getValue().getStockProperty().asObject());
@@ -78,7 +80,7 @@ public class ProductOverviewController {
         User loggedInUser = UserManagement.getLoggedInUser();
         // Bepaal wat niet zichtbaar is voor k
         if (loggedInUser.getUserType() == UserType.CUSTOMER) {
-            availabilityColumn.setVisible(false);
+            // availabilityColumn.setVisible(false);
             timesViewedColumn.setVisible(false);
             stockColumn.setVisible(false);
         }
@@ -94,7 +96,7 @@ public class ProductOverviewController {
         ArrayList<BranchFilter> branchFilters = JsonHandler.getBranchFilters();
         branchFilters.forEach(filter -> cities.add(filter.toString()));
         cityComboBox.setItems(cities);
-        cityComboBox.valueProperty().addListener((obs, oldValue, newValue) -> filterProductsByCity(branchFilters, newValue));
+        cityComboBox.valueProperty().addListener((obs, oldValue, newValue) -> filterProductsByCity(branchFilters, newValue, oldValue));
         cityComboBox.getSelectionModel().selectFirst();
     }
 
@@ -111,58 +113,108 @@ public class ProductOverviewController {
         // Voeg zoeklogica toe voor producten
     }
 
-    private void filterProductsByCity(ArrayList<BranchFilter> branchFilters, String selectedCity) {
+    private void filterProductsByCity(ArrayList<BranchFilter> branchFilters, String selectedCity, String oldValue) {
         if (selectedCity == null || selectedCity.isEmpty()) {
-            InventoryManagement.setInventory(null);
-            fillProductTable();
+            Platform.runLater(() -> {
+                restoreLastSelectedCity();
+            });
         } else {
+            if (selectedCity.equals(lastSelectedCity)) {
+                return;
+            }
+            ShoppingList shoppingList = UserManagement.getLoggedInUserShoppingList();
+            ArrayList<ShoppingListProduct> missingProducts = new ArrayList<>();
+
             BranchFilter branchFilter = UtilityFunctions.getBranchFilterFromArrayListByCity(branchFilters, selectedCity);
-            InventoryManagement.setInventory(new Inventory(branchFilter.getId()));
-            fillProductTable();
+            if (shoppingList != null) {
+                missingProducts = JsonHandler.getShoppingListProductsMissingInBranch(branchFilter.getId(), shoppingList);
+            }            
+
+            if (shoppingList == null || missingProducts.isEmpty()) {
+                InventoryManagement.setInventory(new Inventory(branchFilter.getId()));
+                fillProductTable();
+                lastSelectedCity = selectedCity;
+            } else {
+                boolean userProceeded = showMissingProductsAlert(missingProducts, branchFilter.getCity(), shoppingList);
+
+                if (userProceeded) {
+                    shoppingList.removeMissingProducts(missingProducts);
+                    InventoryManagement.setInventory(new Inventory(branchFilter.getId()));
+                    fillProductTable();
+                    lastSelectedCity = selectedCity;
+                } else {
+                    Platform.runLater(() -> {
+                        restoreLastSelectedCity();
+                    });
+                }
+            }
+
         }
     }
 
-    public static String generateConflictMessage(List<ShoppingListProduct> conflictingProducts, String branchName) {
-        int maxDisplayCount = 5;
-        if (conflictingProducts.isEmpty()) {
-            return null;
+    private void restoreLastSelectedCity() {
+        if (lastSelectedCity != null) {
+            cityComboBox.setValue(lastSelectedCity);
         }
-
-        String productNames = conflictingProducts.stream().limit(maxDisplayCount).map(ShoppingListProduct::getName).collect(Collectors.joining(", "));
-
-        if (conflictingProducts.size() > maxDisplayCount) {
-            return TranslationHelper.get("shoppingList.changeBranch.conflict.truncated", productNames, conflictingProducts.size() - maxDisplayCount, branchName);
-        }
-
-        return TranslationHelper.get("shoppingList.changeBranch.conflict", productNames, branchName);
     }
 
-    public static void showMissingProductsAlert(String branchId) {
-        ShoppingList shoppingList = UserManagement.getLoggedInUserShoppingList();
+    private static String generateConflictMessage(ArrayList<ShoppingListProduct> missingProducts, String branchName) {
+        StringBuilder productNames = new StringBuilder();
 
-        if (shoppingList == null) {
-            return;
+        boolean isTruncated = missingProducts.size() > ProductOverviewController.maxProductsToShow;
+        int productsToShow = isTruncated ? ProductOverviewController.maxProductsToShow : missingProducts.size();
+
+        for (int i = 0; i < productsToShow; i++) {
+            if (i > 0) {
+                productNames.append(", ");
+            }
+            productNames.append(missingProducts.get(i).getName());
         }
 
-        ArrayList<ShoppingListProduct> missingProducts = JsonHandler.getShoppingListProductsMissingInBranch(branchId, shoppingList);
-        String message = generateConflictMessage(missingProducts, branchId);
+        if (isTruncated) {
+            return TranslationHelper.get("branch.switch.conflict.truncated", missingProducts.size(), productsToShow, productNames.toString());
+        } else if (missingProducts.size() == 1) {
+            return TranslationHelper.get("branch.switch.conflict.singular", productNames.toString(), branchName);
+        }
+        return TranslationHelper.get("branch.switch.conflict.plural", productNames.toString(), branchName);
+    }
 
-        if (message != null) {
-            Alert alert = new Alert(AlertType.CONFIRMATION);
-            alert.setTitle("Producten ontbreken");
+    // boolean return is for: userProceeded
+    public static boolean showMissingProductsAlert(ArrayList<ShoppingListProduct> missingProducts, String branchName, ShoppingList shoppingList) {
+        if (shoppingList == null || missingProducts.isEmpty()) {
+            throw new CustomIllegalArgumentException("showMissingProductsAlert");
+        }
+
+        String conflictMessage = generateConflictMessage(missingProducts, branchName);
+
+        if (conflictMessage != null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle(TranslationHelper.get("branch.switch.conflict.title"));
             alert.setHeaderText(null);
-            alert.setContentText(message);
 
-            ButtonType proceedButton = new ButtonType("Doorgaan");
-            ButtonType cancelButton = new ButtonType("Annuleren");
+            String footer = TranslationHelper.get("branch.switch.conflict.footer");
+            Text textMessage = new Text(conflictMessage + "\n\n");
+            Text textFooter = new Text(footer);
+
+            TextFlow textFlow = new TextFlow(textMessage, textFooter);
+            alert.getDialogPane().setContent(textFlow);
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            alert.getDialogPane().setMinWidth(Region.USE_PREF_SIZE);
+
+            ButtonType proceedButton = new ButtonType(TranslationHelper.get("button.continue"));
+            ButtonType cancelButton = new ButtonType(TranslationHelper.get("button.cancel"));
             alert.getButtonTypes().setAll(proceedButton, cancelButton);
 
-            alert.showAndWait().ifPresent(response -> {
-                if (response == proceedButton) {
-                    shoppingList.removeMissingProducts(missingProducts);
-                }
-            });
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == proceedButton) {
+                shoppingList.removeMissingProducts(missingProducts);
+                return true;
+            } else {
+                return false;
+            }
         }
+
+        return false;
     }
 
 }

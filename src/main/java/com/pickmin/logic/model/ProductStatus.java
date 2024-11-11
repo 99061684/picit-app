@@ -1,5 +1,7 @@
 package com.pickmin.logic.model;
 
+import com.pickmin.translation.TranslationHelper;
+
 public enum ProductStatus {
     TEMPORARILY_UNAVAILABLE(1, "product.temporarily_unavailable", "Tijdelijk niet leverbaar", "Temporarily unavailable", false),
     OUT_OF_STOCK(2, "product.out_of_stock", "Geen voorraad", "Out of stock", false),
@@ -59,4 +61,10 @@ public enum ProductStatus {
         }
         return null;
     }
+
+    @Override
+    public String toString() {
+        return TranslationHelper.get(getTranslationKey());
+    }
+    
 }

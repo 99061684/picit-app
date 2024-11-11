@@ -3,14 +3,12 @@ package com.pickmin.controllers;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-
-import org.controlsfx.control.SearchableComboBox;
+import java.util.HashMap;
 
 import com.pickmin.App;
 import com.pickmin.config.GlobalConfig;
 import com.pickmin.customJavaFX.NumberField;
 import com.pickmin.exceptions.ExistingProductException;
-import com.pickmin.exceptions.InputException;
 import com.pickmin.exceptions.InvalidInputException;
 import com.pickmin.exceptions.MissingFieldException;
 import com.pickmin.logic.general.UtilityFunctions;
@@ -26,16 +24,16 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-public class AddProductController {
+public class AddProductController extends FormController {
 
     @FXML
     private TextField productNameField;
     @FXML
-    private TextField descriptionTextField;
+    private TextField descriptionField;
     @FXML
-    private TextField originTextField;
+    private TextField originField;
     @FXML
-    private SearchableComboBox<ProductCategorie> categorieSearchableComboBox;
+    private TextField categorieField;
     @FXML
     private DatePicker ripeningDatePicker;
     @FXML
@@ -49,6 +47,12 @@ public class AddProductController {
     @FXML
     private Label productNameError;
     @FXML
+    private Label descriptionError;
+    @FXML
+    private Label originError;
+    @FXML
+    private Label categorieError;
+    @FXML
     private Label ripeningDateError;
     @FXML
     private Label seasonError;
@@ -57,21 +61,23 @@ public class AddProductController {
     @FXML
     private Label priceError;
 
-    public AddProductController() {
-    }
-
     @FXML
     private void initialize() {
         UtilityFunctions.configureDatePicker(ripeningDatePicker);
+        initializeErrorFields();
+        // setErrorFields(new MissingFieldException(FieldKey.PRODUCT_NAME));
+        // setErrorFields(new MissingFieldException(FieldKey.PRODUCT_PRICE));
+        // setErrorFields(new MissingFieldException(FieldKey.PRODUCT_SEASONS));
+        // setErrorFields(new MissingFieldException(FieldKey.PRODUCT_RIPENING_DATE));
     }
 
     @FXML
     private void handleAddProduct() {
         try {
             String name = productNameField.getText();
-            String description = descriptionTextField.getText();
-            String origin = originTextField.getText();
-            ProductCategorie categorie = categorieSearchableComboBox.getSelectionModel().getSelectedItem();
+            String description = descriptionField.getText();
+            String origin = originField.getText();
+            ProductCategorie categorie = new ProductCategorie(categorieField.getText());
 
             LocalDate ripeningDate = ripeningDatePicker.getValue();
             ArrayList<String> seasons = UtilityFunctions.extractArrayListFromString(seasonField.getText());
@@ -98,19 +104,17 @@ public class AddProductController {
         }
     }
 
-    @FXML
-    private void setErrorFields(InputException exception) {
-        if (exception.getFieldKey().equals(FieldKey.PRODUCT_NAME)) {
-            productNameError.setText(exception.getMessage());
-        } else if (exception.getFieldKey().equals(FieldKey.PRODUCT_RIPENING_DATE)) {
-            ripeningDateError.setText(exception.getMessage());
-        } else if (exception.getFieldKey().equals(FieldKey.PRODUCT_SEASONS)) {
-            seasonError.setText(exception.getMessage());
-        } else if (exception.getFieldKey().equals(FieldKey.BRANCH_PRODUCT_STOCK)) {
-            stockError.setText(exception.getMessage());
-        } else if (exception.getFieldKey().equals(FieldKey.PRODUCT_PRICE)) {
-            priceError.setText(exception.getMessage());
-        }
+    protected void initializeErrorFields() {
+        errorFields = new HashMap<>();
+        errorFields.put(FieldKey.PRODUCT_NAME, productNameError);
+        errorFields.put(FieldKey.PRODUCT_CATEGORIE, categorieError);
+        errorFields.put(FieldKey.PRODUCT_DESCRIPTION, descriptionError);
+        errorFields.put(FieldKey.PRODUCT_ORIGIN, originError);
+        errorFields.put(FieldKey.PRODUCT_RIPENING_DATE, ripeningDateError);
+        errorFields.put(FieldKey.PRODUCT_SEASONS, seasonError);
+        errorFields.put(FieldKey.PRODUCT_STOCK_NL, stockError);
+        errorFields.put(FieldKey.PRODUCT_PRICE, priceError);
+        resetErrorFields();
     }
 
     // Functie om terug te keren naar het overzicht zonder iets toe te voegen.

@@ -13,32 +13,27 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TextFormatter.Change;
-import javafx.util.StringConverter;
+import javafx.util.converter.DoubleStringConverter;
 
 public class NumberField extends TextField {
     private final DoubleProperty value = new SimpleDoubleProperty();
-    private final DoubleProperty minValue = new SimpleDoubleProperty(Double.MIN_VALUE); // Geen minimum standaard
-    private final DoubleProperty maxValue = new SimpleDoubleProperty(Double.MAX_VALUE); // Geen maximum standaard
-    private final IntegerProperty decimalPlaces = new SimpleIntegerProperty(0); // Standaard geen decimalen (hele getallen)
+    private final DoubleProperty minValue = new SimpleDoubleProperty(Double.MIN_VALUE);
+    private final DoubleProperty maxValue = new SimpleDoubleProperty(Double.MAX_VALUE);
+    private final IntegerProperty decimalPlaces = new SimpleIntegerProperty(0);
 
-    // Gebruik altijd Nederlands format (komma voor decimalen, punt voor
-    // duizendtallen)
     private final NumberFormat numberFormat;
 
     public NumberField() {
-        this(0, 0); // Standaardwaarde 0, geen decimalen
+        this(0, 0);
     }
 
     public NumberField(double initialValue, int decimalPlaces) {
         this.decimalPlaces.set(decimalPlaces);
         this.numberFormat = getNumberFormat(decimalPlaces);
-        setValue(initialValue);
-        initializeListeners();
+        initializeListeners(initialValue);
     }
 
-    private void initializeListeners() {
-        // Waarde veranderen in tekst veld bij verandering van 'value'
-        value.addListener(this::onValueChanged);
+    private void initializeListeners(double initialValue) {
         UnaryOperator<Change> integerFilter = change -> {
             String character = change.getText();
             String newText = change.getControlNewText();
@@ -62,7 +57,7 @@ public class NumberField extends TextField {
             return change;
         };
 
-        StringConverter<Double> converter = new StringConverter<Double>() {
+        DoubleStringConverter converter = new DoubleStringConverter() {
             @Override
             public Double fromString(String s) {
                 Double number = getValue();
@@ -83,14 +78,12 @@ public class NumberField extends TextField {
                 return formatValue(value);
             }
         };
-        TextFormatter<Double> textFormatter = new TextFormatter<Double>(converter, this.getValue(), integerFilter);
+        TextFormatter<Double> textFormatter = new TextFormatter<Double>(converter, initialValue, integerFilter);
         this.setTextFormatter(textFormatter);
 
-        // Direct de juiste geformatteerde waarde tonen wanneer deze wordt gezet
-        setText(formatValue(value.get()));
+        textFormatter.valueProperty().addListener(this::onValueChanged);
     }
 
-    // Aparte functie voor value listener
     private void onValueChanged(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
         if (newValue == null) {
             setText("");
@@ -100,12 +93,11 @@ public class NumberField extends TextField {
             } else if (newValue.doubleValue() > getMaxValue()) {
                 setValue(getMaxValue());
             } else {
-                setText(formatValue(newValue.doubleValue()));
+                setValue(newValue.doubleValue());
             }
         }
     }
 
-    // Formatteer de waarde afhankelijk van het aantal decimalen
     private String formatValue(double value) {
         return numberFormat.format(value);
     }
@@ -113,7 +105,7 @@ public class NumberField extends TextField {
     // Genereer NumberFormat op basis van het aantal decimalen
     private NumberFormat getNumberFormat(int decimalPlaces) {
         NumberFormat format = NumberFormat.getInstance(Locale.forLanguageTag("nl-NL"));
-        format.setGroupingUsed(true); // Gebruik punt voor duizendtallen
+        format.setGroupingUsed(true);
         format.setMaximumFractionDigits(decimalPlaces);
         format.setMinimumFractionDigits(decimalPlaces);
         return format;
@@ -153,7 +145,6 @@ public class NumberField extends TextField {
             return;
         }
         this.decimalPlaces.set(decimalPlaces);
-        // Update het NumberFormat wanneer het aantal decimalen verandert
         this.numberFormat.setMaximumFractionDigits(decimalPlaces);
         this.numberFormat.setMinimumFractionDigits(decimalPlaces);
 

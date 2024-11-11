@@ -14,7 +14,6 @@ import com.pickmin.exceptions.MissingFieldException;
 import com.pickmin.logic.general.UtilityFunctions;
 import com.pickmin.logic.json.JsonHandler;
 import com.pickmin.logic.model.ProductCategorie;
-import com.pickmin.logic.model.ProductUnit;
 
 public class Validation {
     private static final String passwordRegex;
@@ -34,8 +33,26 @@ public class Validation {
     }
 
     // Controleer of een veld niet leeg is
-    public static void validateNotEmpty(Object input, FieldKey fieldKey) throws MissingFieldException {
+    public static void validateNotEmpty(Integer input, FieldKey fieldKey) throws MissingFieldException {
         if (input == null) {
+            throw new MissingFieldException(fieldKey);
+        }
+    }
+
+    public static void validateNotEmpty(Double input, FieldKey fieldKey) throws MissingFieldException {
+        if (input == null) {
+            throw new MissingFieldException(fieldKey);
+        }
+    }
+
+    public static void validateNotEmpty(LocalDate input, FieldKey fieldKey) throws MissingFieldException {
+        if (input == null) {
+            throw new MissingFieldException(fieldKey);
+        }
+    }
+
+    public static void validateNotEmpty(ProductCategorie input, FieldKey fieldKey) throws MissingFieldException {
+        if (input == null || input.getName().isEmpty()) {
             throw new MissingFieldException(fieldKey);
         }
     }
@@ -60,7 +77,7 @@ public class Validation {
         validateNotEmpty(name, FieldKey.PRODUCT_NAME);
         checkExistingProduct(name, id, FieldKey.PRODUCT_NAME);
         validateNotEmpty(description, FieldKey.PRODUCT_DESCRIPTION);
-        validateNotEmpty(origin, FieldKey.PRODUCT_NAME);
+        validateNotEmpty(origin, FieldKey.PRODUCT_ORIGIN);
         validateNotEmpty(ripeningDate, FieldKey.PRODUCT_RIPENING_DATE);
         validateNotEmpty(seasons, FieldKey.PRODUCT_SEASONS);
         validateStock(stockNL, FieldKey.PRODUCT_STOCK_NL);

@@ -1,7 +1,7 @@
 package com.pickmin.customJavaFX;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
 
 import com.pickmin.App;
 import com.pickmin.controllers.ProductOverviewController;
@@ -9,6 +9,8 @@ import com.pickmin.exceptions.InvalidParametersControllerException;
 import com.pickmin.logic.model.BranchProduct;
 import com.pickmin.logic.model.Customer;
 import com.pickmin.logic.model.Employee;
+import com.pickmin.logic.model.Parameter;
+import com.pickmin.logic.model.ParameterKey;
 import com.pickmin.logic.model.Product;
 import com.pickmin.logic.model.ProductStatus;
 import com.pickmin.logic.model.ShoppingList;
@@ -124,10 +126,11 @@ public class ActionButtonTableCellFactory implements Callback<TableColumn<Branch
             }
 
             private void goToEditProductPage(Product product) {
-                HashMap<String, Object> args = new HashMap<>();
-                args.put("product", product);
+                ArrayList<Parameter<?>> params = new ArrayList<>();
+                params.add(new Parameter<>(ParameterKey.PRODUCT, product));
+
                 try {
-                    App.goToPage("EditProduct", args);
+                    App.goToPage("EditProduct", params);
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (InvalidParametersControllerException e) {

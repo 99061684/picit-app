@@ -21,9 +21,9 @@
         <TableView fx:id="productTable">
             <columns>
                 <TableColumn text="%product.name" fx:id="productNameColumn" />
-                <TableColumn text="%product.availability" fx:id="availabilityColumn" />
+                <TableColumn text="%product.availability" fx:id="productStatusColumn" />
                 <TableColumn text="%product.timesviewed" fx:id="timesViewedColumn" />
-                <TableColumn text="%product.season" fx:id="seasonColumn" />
+                <TableColumn text="%product.seasons" fx:id="seasonColumn" />
                 <TableColumn text="%product.stock" fx:id="stockColumn" />
                 <TableColumn text="%product.price" fx:id="priceColumn" />
                 <TableColumn text="%product.actions" fx:id="actionColumn" />

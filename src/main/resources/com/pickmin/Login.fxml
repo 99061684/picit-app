@@ -7,7 +7,7 @@
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.pickmin.controllers.LoginController" styleClass="login-page-vbox-container">
 
     <VBox styleClass="login-vbox-container">
-        <Label text="%login.title" styleClass="label-title" />
+        <Label text="%title.login" styleClass="label-title" />
 
         <TextField fx:id="usernameField" promptText="%login.username"/>
         <PasswordField fx:id="passwordField" promptText="%login.password"/>

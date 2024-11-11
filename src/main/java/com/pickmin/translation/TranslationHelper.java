@@ -1,5 +1,6 @@
 package com.pickmin.translation;
 
+import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedHashSet;
@@ -50,7 +51,7 @@ public class TranslationHelper {
             }
         }
 
-        return String.format(translation, args);
+        return MessageFormat.format(translation, args);
     }
 
     private static void printMissingResourceException(MissingResourceException ex) {

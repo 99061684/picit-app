@@ -1,11 +1,12 @@
 package com.pickmin;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
 
 import com.pickmin.config.GlobalConfig;
 import com.pickmin.controllers.ControllerWithParameters;
 import com.pickmin.exceptions.InvalidParametersControllerException;
+import com.pickmin.logic.model.Parameter;
 import com.pickmin.translation.TranslationHelper;
 import com.pickmin.translation.TranslationResourceBundle;
 
@@ -26,7 +27,7 @@ public class App extends Application {
         scene.setRoot(loadFXML(fxml));
     }
 
-    public static void goToPage(String fxml, HashMap<String, Object> args) throws IOException, InvalidParametersControllerException {
+    public static void goToPage(String fxml, ArrayList<Parameter<?>> args) throws IOException, InvalidParametersControllerException {
         scene.setRoot(loadFXML(fxml, args));
     }
 
@@ -39,26 +40,33 @@ public class App extends Application {
     }
 
     // Laad het FXML-bestand in met de TranslationHelper class om vertalingen op te halen en geef argumenten mee aan de controller.
-    private static Parent loadFXML(String fxml, HashMap<String, Object> args) throws IOException, InvalidParametersControllerException {
+    private static Parent loadFXML(String fxml, ArrayList<Parameter<?>> parameters) throws IOException, InvalidParametersControllerException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
         fxmlLoader.setResources(new TranslationResourceBundle());
 
         Parent root = (Parent) fxmlLoader.load();
-        ControllerWithParameters myController = fxmlLoader.getController();
-        myController.setParameters(args);
+        
+        Object myController = fxmlLoader.getController();
+        if (myController instanceof ControllerWithParameters) {
+            ((ControllerWithParameters) myController).setParameters(parameters);
+        } else if (parameters != null && !parameters.isEmpty()) {
+            throw new InvalidParametersControllerException(fxml);
+        }
         return root;
     }
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("Login"));
-        scene.getStylesheets().add(App.class.getResource("styling/stylesheet.css").toExternalForm());
+        App.scene = new Scene(loadFXML("Login"));
+        App.scene.getStylesheets().add(App.class.getResource("styling/stylesheet.css").toExternalForm());
         stage.setWidth(GlobalConfig.DEFAULT_WIDTH);
         stage.setHeight(GlobalConfig.DEFAULT_HEIGHT);
         stage.setMinWidth(GlobalConfig.DEFAULT_WIDTH);
         stage.setMinHeight(GlobalConfig.DEFAULT_HEIGHT);
         stage.setTitle(TranslationHelper.get("app.name"));
-        stage.setScene(scene);
+
+        scene.getRoot().autosize();
+        stage.setScene(App.scene);
         stage.show();
     }
 

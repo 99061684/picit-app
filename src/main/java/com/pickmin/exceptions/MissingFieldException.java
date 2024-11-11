@@ -5,6 +5,6 @@ import com.pickmin.translation.TranslationHelper;
 
 public class MissingFieldException extends InputException {
     public MissingFieldException(FieldKey fieldKey) {
-        super(TranslationHelper.get("validation.missingField." + fieldKey), fieldKey);
+        super(TranslationHelper.get("validation.missingField", fieldKey), fieldKey);
     }
 }
